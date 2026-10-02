@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🤖 ArbAiBot - AI Trading Bot for DeFi Arbitrage
+# 🤖 ArbAiBot - Free AI Trading Bot for DeFi Arbitrage
 
 ### AI-Powered Automatic Trading Bot · MEV Bot Arbitrage · Cross-Chain Arbitrage · Multi-DEX Crypto Trading App
 
