@@ -1,0 +1,358 @@
+{
+  "trading": {
+    "tradeAmountNative": 0.5,
+    "tradeAmountUsd": 500,
+    "stableTokenAmount": 500,
+    "stableDecimals": 6,
+    "minProfitUsd": 1,
+    "maxSlippagePct": 0.5,
+    "maxPathLength": 3,
+    "gasPriceGwei": 20,
+    "gasLimit": 300000,
+    "deadlineSec": 300,
+    "loopIntervalMs": 5000,
+    "scanMode": "both",
+    "maxPairsPerScan": 8,
+    "maxPendingTxPerNetwork": 1000
+  },
+  "features": {
+    "enableMempoolMonitor": true,
+    "enableCrosschain": false,
+    "enableFlashLoans": false,
+    "enablePerpArb": false,
+    "enableConcentratedLiquidity": false,
+    "dryRun": true
+  },
+  "flashloan": {
+    "provider": "aave",
+    "maxAmountUsd": 10000,
+    "feeBps": 9,
+    "autoRepay": true
+  },
+  "risk": {
+    "emergencyPause": false,
+    "honeypotCheck": true,
+    "minLiquidityUsd": 5000,
+    "maxDailyLossUsd": 100,
+    "maxConsecutiveFailures": 3,
+    "maxOpenPositions": 3,
+    "maxGasPriceGwei": 200,
+    "maxTradeAmountUsd": 1000,
+    "takeProfitUsd": 50,
+    "stopLossUsd": 20,
+    "killSwitchDrawdownPct": 20,
+    "cooldownAfterFailureSec": 60,
+    "blacklistTokens": []
+  },
+  "networks": {
+    "ethereum": {
+      "enabled": true,
+      "rpcUrl": "https://ethereum-rpc.publicnode.com",
+      "mempoolRpcUrl": "https://ethereum-rpc.publicnode.com",
+      "pollIntervalMs": 2000,
+      "gasPriceGwei": 0,
+      "tokens": [
+        "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+        "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+        "0xdAC17F958D2ee523a2206206994597C13D831ec7"
+      ],
+      "dexes": [
+        {
+          "id": "uniswapv3",
+          "name": "Uniswap V3",
+          "type": "uniswapv3",
+          "factory": "0x1f98431c8ad98523631ae4a59f267346ea31f984",
+          "router": "0xe592427a0aece92de3edee1f18e0157c05861564",
+          "enabled": true
+        },
+        {
+          "id": "uniswapv2",
+          "name": "Uniswap V2",
+          "type": "uniswapv2",
+          "factory": "0x5c69bee701ef814a2b6a3edd4b1652cb9cc5aa6f",
+          "router": "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+          "enabled": true
+        }
+      ],
+      "aggregators": [
+        {
+          "id": "paraswap",
+          "name": "ParaSwap",
+          "type": "paraswap",
+          "apiBaseUrl": "https://api.paraswap.io",
+          "apiKey": "",
+          "enabled": true
+        }
+      ]
+    },
+    "base": {
+      "enabled": true,
+      "rpcUrl": "https://mainnet.base.org",
+      "mempoolRpcUrl": "https://mainnet.base.org",
+      "pollIntervalMs": 2000,
+      "gasPriceGwei": 0,
+      "tokens": [
+        "0x4200000000000000000000000000000000000006",
+        "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"
+      ],
+      "dexes": [
+        {
+          "id": "aerodrome",
+          "name": "Aerodrome",
+          "type": "aerodrome",
+          "factory": "0x420dd381b31aef6683db6b902084cb0ffece40da",
+          "router": "0xcf77a3ba9a5ca399b7c97c74d54e5b1beb874e43",
+          "enabled": true
+        },
+        {
+          "id": "uniswapv3",
+          "name": "Uniswap V3",
+          "type": "uniswapv3",
+          "factory": "0x1f98431c8ad98523631ae4a59f267346ea31f984",
+          "router": "0xe592427a0aece92de3edee1f18e0157c05861564",
+          "enabled": true
+        }
+      ],
+      "aggregators": [
+        {
+          "id": "paraswap",
+          "name": "ParaSwap",
+          "type": "paraswap",
+          "apiBaseUrl": "https://api.paraswap.io",
+          "apiKey": "",
+          "enabled": true
+        }
+      ]
+    },
+    "bsc": {
+      "enabled": true,
+      "rpcUrl": "https://bsc-dataseed.binance.org/",
+      "mempoolRpcUrl": "https://bsc-dataseed.binance.org/",
+      "pollIntervalMs": 2000,
+      "gasPriceGwei": 0,
+      "tokens": [
+        "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+        "0x55d398326f99059fF775485246999027B3197955",
+        "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56"
+      ],
+      "dexes": [
+        {
+          "id": "pancakeswap",
+          "name": "PancakeSwap V2",
+          "type": "pancakeswap",
+          "factory": "0xca143ce32fe78f1f7019d7d551a6402fc5350c73",
+          "router": "0x10ed43c718714eb63d5aa57b78b54704e256024e",
+          "enabled": true
+        }
+      ],
+      "aggregators": [
+        {
+          "id": "paraswap",
+          "name": "ParaSwap",
+          "type": "paraswap",
+          "apiBaseUrl": "https://api.paraswap.io",
+          "apiKey": "",
+          "enabled": true
+        }
+      ]
+    },
+    "solana": {
+      "enabled": true,
+      "rpcUrl": "https://api.mainnet-beta.solana.com",
+      "mempoolRpcUrl": "https://api.mainnet-beta.solana.com",
+      "pollIntervalMs": 2000,
+      "gasPriceGwei": 0,
+      "tokens": [
+        "So11111111111111111111111111111111111111112"
+      ],
+      "dexes": [],
+      "aggregators": []
+    },
+    "arbitrum": {
+      "enabled": true,
+      "rpcUrl": "https://arb1.arbitrum.io/rpc",
+      "mempoolRpcUrl": "https://arb1.arbitrum.io/rpc",
+      "pollIntervalMs": 2000,
+      "gasPriceGwei": 0,
+      "tokens": [
+        "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
+        "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+        "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9"
+      ],
+      "dexes": [
+        {
+          "id": "uniswapv3",
+          "name": "Uniswap V3",
+          "type": "uniswapv3",
+          "factory": "0x1f98431c8ad98523631ae4a59f267346ea31f984",
+          "router": "0xe592427a0aece92de3edee1f18e0157c05861564",
+          "enabled": true
+        }
+      ],
+      "aggregators": [
+        {
+          "id": "paraswap",
+          "name": "ParaSwap",
+          "type": "paraswap",
+          "apiBaseUrl": "https://api.paraswap.io",
+          "apiKey": "",
+          "enabled": true
+        }
+      ]
+    },
+    "avalanche": {
+      "enabled": true,
+      "rpcUrl": "https://api.avax.network/ext/bc/C/rpc",
+      "mempoolRpcUrl": "https://api.avax.network/ext/bc/C/rpc",
+      "pollIntervalMs": 2000,
+      "gasPriceGwei": 0,
+      "tokens": [
+        "0xB31f66AA3C1e785363F0875A1B74E27b85FD9c63",
+        "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E",
+        "0x970229A8A518b4Ede774191BFadE9e3414391742"
+      ],
+      "dexes": [],
+      "aggregators": [
+        {
+          "id": "paraswap",
+          "name": "ParaSwap",
+          "type": "paraswap",
+          "apiBaseUrl": "https://api.paraswap.io",
+          "apiKey": "",
+          "enabled": true
+        }
+      ]
+    },
+    "optimism": {
+      "enabled": true,
+      "rpcUrl": "https://mainnet.optimism.io",
+      "mempoolRpcUrl": "https://mainnet.optimism.io",
+      "pollIntervalMs": 2000,
+      "gasPriceGwei": 0,
+      "tokens": [
+        "0x4200000000000000000000000000000000000006",
+        "0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85"
+      ],
+      "dexes": [
+        {
+          "id": "uniswapv3",
+          "name": "Uniswap V3",
+          "type": "uniswapv3",
+          "factory": "0x1f98431c8ad98523631ae4a59f267346ea31f984",
+          "router": "0xe592427a0aece92de3edee1f18e0157c05861564",
+          "enabled": true
+        },
+        {
+          "id": "velodrome",
+          "name": "Velodrome",
+          "type": "velodrome",
+          "factory": "0xf1046053aa5682b4f9a81b5481394da16be5ff5a",
+          "router": "0xa062ae8a9c5e11aaa026fc2670b0d65ccc8b2858",
+          "enabled": true
+        }
+      ],
+      "aggregators": [
+        {
+          "id": "paraswap",
+          "name": "ParaSwap",
+          "type": "paraswap",
+          "apiBaseUrl": "https://api.paraswap.io",
+          "apiKey": "",
+          "enabled": true
+        }
+      ]
+    },
+    "polygon": {
+      "enabled": true,
+      "rpcUrl": "https://polygon.drpc.org",
+      "mempoolRpcUrl": "https://polygon.drpc.org",
+      "pollIntervalMs": 2000,
+      "gasPriceGwei": 0,
+      "tokens": [
+        "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
+        "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359",
+        "0xc2132D05D31c914a87C6611C10748AEb04B58e8F"
+      ],
+      "dexes": [
+        {
+          "id": "uniswapv3",
+          "name": "Uniswap V3",
+          "type": "uniswapv3",
+          "factory": "0x1f98431c8ad98523631ae4a59f267346ea31f984",
+          "router": "0xe592427a0aece92de3edee1f18e0157c05861564",
+          "enabled": true
+        },
+        {
+          "id": "quickswap",
+          "name": "QuickSwap",
+          "type": "quickswap",
+          "factory": "0x5757371414417b8c6caad45baef941abc7d3ab32",
+          "router": "0xa5e0829caced8ffdd4de3c43696c57f7d7a678ff",
+          "enabled": true
+        },
+        {
+          "id": "sushiswap",
+          "name": "SushiSwap",
+          "type": "sushiswap",
+          "factory": "0xc35dadb65012ec5796536bd9864ed8773abc74c4",
+          "router": "0x1b02da8cb0d097eb8d57a175b88c7d8b47997506",
+          "enabled": true
+        }
+      ],
+      "aggregators": [
+        {
+          "id": "paraswap",
+          "name": "ParaSwap",
+          "type": "paraswap",
+          "apiBaseUrl": "https://api.paraswap.io",
+          "apiKey": "",
+          "enabled": true
+        }
+      ]
+    }
+  },
+  "wallets": {
+    "activeId": "wallet-mur6jykk7irkf",
+    "list": [
+      {
+        "id": "wallet-mur6jykk7irkf",
+        "label": "Wallet t1q",
+        "type": "generated",
+        "address": "0xdf8ddcfe230e18cc616ed82ee6ac7edb48f69a4f",
+        "privateKey": "0x446d809a1869aa654431341567fbe5cf4986fbdcc13eba1747d3e88373a534fd",
+        "seedPhrase": "bulk feed acoustic urban direct license melody defy drill struggle gap quit",
+        "enabled": true,
+        "createdAt": "2026-10-02T16:31:15.908Z",
+        "settings": {
+          "tradeAmountNative": null,
+          "tradeAmountUsd": null,
+          "stableTokenAmount": null,
+          "minProfitUsd": null,
+          "maxSlippagePct": null,
+          "gasPriceGwei": null,
+          "gasLimit": null,
+          "deadlineSec": null,
+          "allowedNetworks": [],
+          "dryRunOnly": false
+        }
+      }
+    ]
+  },
+  "oracle": {
+    "provider": "defillama",
+    "apiBaseUrl": "https://coins.llama.fi",
+    "apiKey": "",
+    "cacheTtlSec": 60
+  },
+  "ai": {
+    "provider": "demo",
+    "apiBaseUrl": "",
+    "apiKey": "",
+    "model": "gpt-4o-mini",
+    "temperature": 0.3,
+    "maxTokens": 1200,
+    "autoApplyRecommendations": false,
+    "analysisIntervalMin": 0,
+    "autonomousTrading": false
+  }
+}

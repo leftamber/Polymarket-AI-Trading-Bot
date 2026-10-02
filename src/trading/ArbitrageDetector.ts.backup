@@ -1,0 +1,600 @@
+import { ethers } from 'ethers';
+import {
+  AbstractDEX,
+  UniswapV2,
+  UniswapV3,
+  PancakeSwap,
+  Aerodrome,
+  TraderJoe,
+  Velodrome,
+  QuickSwap,
+  SushiSwap
+} from '../dex';
+import {
+  WormholeConnector,
+  SolanaConnector
+} from '../crosschain';
+import {
+  NETWORKS,
+  BRIDGES,
+  AGGREGATORS,
+  LENDING,
+  PERP_PLATFORMS,
+  SETTINGS
+} from '../config';
+import { logger } from '../logger';
+
+interface Opportunity {
+  type: string;
+  network?: string;
+  dexIn?: string;
+  dexOut?: string;
+  tokenIn?: string;
+  tokenOut?: string;
+  amountIn?: bigint;
+  amountOutMin?: bigint;
+  profitEstimate?: number;
+  confidence?: number;
+  timestamp: Date;
+  details?: any;
+}
+
+// Map of network to available DEX implementations
+const DEX_IMPLEMENTATIONS: Record<string, new (network: keyof typeof NETWORKS) => AbstractDEX> = {
+  uniswapv2: UniswapV2,
+  uniswapv3: UniswapV3,
+  pancakeswap: PancakeSwap,
+  aerodrome: Aerodrome,
+  traderjoe: TraderJoe,
+  velodrome: Velodrome,
+  quickswap: QuickSwap,
+  sushiswap: SushiSwap,
+};
+
+export class ArbitrageDetector {
+  private dexes: Map<string, Map<string, AbstractDEX>>; // network -> dexName -> instance
+  private bridges: Map<string, any>; // bridgeName -> instance
+  private solanaConnector: SolanaConnector | null;
+
+  constructor() {
+    // Initialize DEXes for each network
+    this.dexes = new Map();
+    this.initializeDexes();
+
+    // Initialize bridges
+    this.bridges = new Map();
+    this.initializeBridges();
+
+    // Initialize Solana connector
+    this.solanaConnector = null;
+
+    logger.info('ArbitrageDetector initialized with multiple DEX and bridge support');
+  }
+
+  /**
+   * Initialize DEX implementations for each network based on config
+   */
+  private initializeDexes() {
+    const networkKeys = Object.keys(NETWORKS).filter(key => key !== 'solana') as Array<keyof typeof NETWORKS>;
+    for (const networkKey of networkKeys) {
+      const networkConfig = NETWORKS[networkKey] as typeof NETWORKS[Exclude<keyof typeof NETWORKS, 'solana'>];
+
+      const networkDexes = new Map<string, AbstractDEX>();
+
+      // Determine which DEXes to initialize based on what's configured in the network
+      // For now, we'll initialize all known DEX implementations that have addresses configured
+      const dexConfigs: Record<string, string | undefined> = {
+        // Uniswap V2
+        uniswapv2: (networkConfig['uniswapV2Factory'] as string) || (networkConfig['factoryAddress'] as string),
+        // Uniswap V3
+        uniswapv3: (networkConfig['uniswapV3Factory'] as string),
+        // PancakeSwap V2
+        pancakeswap: (networkConfig['pancakeSwapV2Factory'] as string),
+        // PancakeSwap V3
+        pancakeswapv3: (networkConfig['pancakeSwapV3Factory'] as string),
+        // Aerodrome
+        aerodrome: (networkConfig['aerodromeFactory'] as string),
+        // Trader Joe
+        traderjoe: (networkConfig['traderJoeV2Factory'] as string),
+        // Velodrome
+        velodrome: (networkConfig['velocityFactory'] as string) || (networkConfig['aerodromeFactory'] as string), // Velodrome shares factory with Aerodrome on some chains
+        // QuickSwap
+        quickswap: (networkConfig['quickswapV2Factory'] as string),
+        // SushiSwap
+        sushiswap: (networkConfig['sushiFactory'] as string),
+      };
+
+      for (const [dexName, factoryAddress] of Object.entries(dexConfigs)) {
+        if (factoryAddress && DEX_IMPLEMENTATIONS[dexName]) {
+          try {
+            const DexClass = DEX_IMPLEMENTATIONS[dexName];
+            const dexInstance = new DexClass(networkKey as keyof typeof NETWORKS);
+            networkDexes.set(dexName, dexInstance);
+            logger.debug(`Initialized ${dexName} on ${networkKey}`);
+          } catch (error) {
+            logger.warn(`Failed to initialize ${dexName} on ${networkKey}:`, error);
+          }
+        }
+      }
+
+      this.dexes.set(networkKey, networkDexes);
+    }
+  }
+  private initializeBridges() {
+    for (const [bridgeName, bridgeConfig] of Object.entries(BRIDGES)) {
+      try {
+        if (bridgeName === 'wormhole') {
+          // Wormhole needs to be initialized per network
+          for (const [chainKey] of Object.entries(NETWORKS)) {
+            if (chainKey !== 'solana' if (chainKey !== 'solana' && bridgeConfig[chainKey as keyof typeof BRIDGES['wormhole']]) {if (chainKey !== 'solana' && bridgeConfig[chainKey as keyof typeof BRIDGES['wormhole']]) { (bridgeConfig as Record<string, unknown>)[chainKey as keyof typeof BRIDGES['wormhole']]) {
+              const connector = new WormholeConnector(chainKey as keyof typeof NETWORKS);
+              // Store with compound key: bridgeName_chain
+              this.bridges.set(`${bridgeName}_${chainKey}`, connector);
+              logger.debug(`Initialized ${bridgeName} connector for ${chainKey}`);
+            }
+          }
+        }
+        // Add other bridge initializations here as needed
+        // For now, we'll focus on making the structure extensible
+      } catch (error) {
+        logger.warn(`Failed to initialize ${bridgeName} bridge:`, error);
+      }
+    }
+  }
+
+  /**
+   * Set Solana connector
+   */
+  setSolanaConnector(connector: SolanaConnector) {
+    this.solanaConnector = connector;
+  }
+
+  /**
+   * Get a DEX instance for a specific network and DEX type
+   */
+  getDex(network: string, dexType: string): AbstractDEX | undefined {
+    const networkDexes = this.dexes.get(network);
+    return networkDexes?.get(dexType.toLowerCase());
+  }
+
+  /**
+   * Get all available DEXes for a network
+   */
+  getAvailableDexes(network: string): string[] {
+    const networkDexes = this.dexes.get(network);
+    return networkDexes ? Array.from(networkDexes.keys()) : [];
+  }
+
+  /**
+   * Get a bridge connector
+   */
+  getBridge(bridgeName: string, network?: string): any {
+    if (network) {
+      return this.bridges.get(`${bridgeName}_${network}`);
+    }
+    // Return first match if network not specified (for simple cases)
+    for (const [key, value] of this.bridges.entries()) {
+      if (key.startsWith(`${bridgeName}_`)) {
+        return value;
+      }
+    }
+    return undefined;
+  }
+
+  /**
+   * Detect arbitrage opportunities from pending transactions
+   * @param pendingTransactions - Map of network to array of pending transactions
+   * @returns Array of opportunity objects
+   */
+  async detectOpportunities(pendingTransactions: Record<string, any[]>): Promise<Opportunity[]> {
+    logger.debug('Detecting arbitrage opportunities across all configured networks and DEXes');
+    const opportunities: Opportunity[] = [];
+
+    // 1. Analyze each network for DEX arbitrage opportunities
+    for (const [networkKey, txs] of Object.entries(pendingTransactions)) {
+      const networkOpportunities = await this.analyzeNetworkForOpportunities(
+        networkKey as keyof typeof NETWORKS,
+        txs
+      );
+      opportunities.push(...networkOpportunities);
+    }
+
+    // 2. Check for cross-chain arbitrage opportunities (if enabled)
+    if (SETTINGS.enableCrosschain && this.solanaConnector) {
+      const crosschainOps = await this.detectCrosschainOpportunities();
+      opportunities.push(...crosschainOps);
+    }
+
+    // 3. Check for flash loan arbitrage opportunities (if enabled)
+    if (SETTINGS.enableFlashLoans) {
+      const flashloanOps = await this.detectFlashloanOpportunities();
+      opportunities.push(...flashloanOps);
+    }
+
+    // 4. Check for perp/funding rate arbitrage (if enabled)
+    if (SETTINGS.enablePerpArb) {
+      const perpOps = await this.detectPerpOpportunities();
+      opportunities.push(...perpOps);
+    }
+
+    logger.info(`Detected ${opportunities.length} potential arbitrage opportunities`);
+    return opportunities;
+  }
+
+  /**
+   * Analyze pending transactions on a specific network for arbitrage opportunities
+   */
+  private async analyzeNetworkForOpportunities(
+    network: keyof typeof NETWORKS,
+    pendingTransactions: any[]
+  ): Promise<Opportunity[]> {
+    const opportunities: Opportunity[] = [];
+    const networkDexes = this.dexes.get(network);
+
+    if (!networkDexes || networkDexes.size === 0) {
+      return opportunities;
+    }
+
+    // Group transactions by DEX router to identify swap patterns
+    const dexTxMap: Map<string, any[]> = new Map();
+
+    for (const tx of pendingTransactions) {
+      if (!tx.to) continue;
+
+      // Check if transaction is to any known DEX router on this network
+      for (const [dexName, dexInstance] of networkDexes.entries()) {
+        const routerAddress = this.getDexRouterAddress(network, dexName);
+        if (routerAddress && tx.to.toLowerCase() === routerAddress.toLowerCase()) {
+          if (!dexTxMap.has(dexName)) {
+            dexTxMap.set(dexName, []);
+          }
+          dexTxMap.get(dexName)!.push(tx);
+          break; // Transaction can only be to one DEX
+        }
+      }
+    }
+
+    // Analyze each DEX's transactions for arbitrage patterns
+    for (const [dexName, txs] of dexTxMap.entries()) {
+      const dexOps = await this.analyzeDexTransactions(
+        network,
+        dexName,
+        txs
+      );
+      opportunities.push(...dexOps);
+    }
+
+    // Also look for multi-DEX arbitrage opportunities within the same network
+    const multiDexOps = await this.detectMultiDexArbitrage(network, pendingTransactions);
+    opportunities.push(...multiDexOps);
+
+    return opportunities;
+  }
+
+  /**
+   * Get router address for a specific DEX on a network
+   */
+  private getDexRouterAddress(network: string, dexName: string): string | undefined {
+    const networkConfig = NETWORKS[network as keyof typeof NETWORKS] as Record<string, unknown>;
+    if (!networkConfig) return undefined;
+
+    const routerMap: Record<string, string | undefined> = {
+      uniswapv2: (networkConfig['uniswapV2Router'] as string) || (networkConfig['routerAddress'] as string),
+      uniswapv3: (networkConfig['uniswapV3Router'] as string),
+      pancakeswap: (networkConfig['pancakeSwapV2Router'] as string),
+      pancakeswapv3: (networkConfig['pancakeSwapV3Router'] as string),
+      aerodrome: (networkConfig['aerodromeRouter'] as string),
+      traderjoe: (networkConfig['traderJoeV2Router'] as string),
+      velodrome: (networkConfig['velocityRouter'] as string),
+      quickswap: (networkConfig['quickswapV2Router'] as string),
+      sushiswap: (networkConfig['sushiRouter'] as string),
+    };
+
+    return routerMap[dexName];
+  }
+
+  /**
+   * Analyze transactions for a specific DEX to find arbitrage opportunities
+   */
+  private async analyzeDexTransactions(
+    network: string,
+    dexName: string,
+    transactions: any[]
+  ): Promise<Opportunity[]> {
+    const opportunities: Opportunity[] = [];
+    const dexInstance = this.getDex(network, dexName);
+
+    if (!dexInstance) return opportunities;
+
+    // For each transaction, try to decode and analyze
+    for (const tx of transactions) {
+      try {
+        // In a real implementation, we would:
+        // 1. Decode the transaction input data
+        // 2. Extract token addresses and amounts
+        // 3. Simulate the trade to see actual price impact
+        // 4. Compare with other DEXes on same chain for arbitrage
+
+        // For now, we'll create a simplified opportunity based on tx analysis
+        const opportunity = await this.createOpportunityFromTx(
+          network,
+          dexName,
+          tx,
+          dexInstance
+        );
+
+        if (opportunity) {
+          opportunities.push(opportunity);
+        }
+      } catch (error) {
+        logger.debug(`Failed to analyze transaction ${tx.hash} on ${network}/${dexName}:`, error.message);
+      }
+    }
+
+    return opportunities;
+  }
+
+  /**
+   * Create an opportunity object from a transaction
+   */
+  private async createOpportunityFromTx(
+    network: string,
+    dexName: string,
+    tx: any,
+    dexInstance: AbstractDEX
+  ): Promise<Opportunity | null> {
+    try {
+      // Extract function selector from tx data
+      if (!tx.data || tx.data.length < 10) return null;
+
+      const functionSelector = tx.data.substring(0, 10);
+
+      // Common swap function selectors
+      const swapSelectors: Record<string, string> = {
+        // Uniswap V2/V3 style
+        '0x38ed1739': 'swapExactTokensForTokens', // 0x38ed1739
+        '0x7ff36ab5': 'swapExactETHForTokens',  // 0x7ff36ab5
+        '0x4a25d94a': 'swapExactTokensForETH',  // 0x4a25d94a
+        '0x18cbafe5': 'swapExactTokensForTokensSupportingFeeOnTransferTokens',
+        '0x8803dbee': 'swapETHForExactTokens',  // 0x8803dbee
+        // Add more as needed
+      };
+
+      const functionName = swapSelectors[functionSelector as keyof typeof swapSelectors];
+      if (!functionName) return null; // Not a swap transaction we can easily analyze
+
+      // In a real implementation, we would decode the parameters here
+      // For now, we'll create a placeholder opportunity with estimated profit
+
+      // Simulate some analysis - in reality this would be much more sophisticated
+      const hasArbitragePotential = Math.random() > 0.7; // 30% chance of potential arbitrage
+
+      if (!hasArbitragePotential) return null;
+
+      // Estimate profit based on transaction value and network characteristics
+      const valueInEth = tx.value ? parseFloat(ethers.formatEther(tx.value)) : 0;
+      const estimatedProfit = valueInEth * (Math.random() * 0.05); // 0-5% profit estimate
+
+      // Only return if profit exceeds minimum threshold
+      if (estimatedProfit < SETTINGS.minProfitUsd) return null;
+
+      return {
+        type: 'dex_arbitrage',
+        network,
+        dexIn: dexName,
+        dexOut: dexName, // Same DEX for now - in reality we'd look for cross-DEX opps
+        amountIn: tx.value || BigInt(0),
+        profitEstimate: estimatedProfit,
+        confidence: 0.6, // Medium confidence for tx-based detection
+        timestamp: new Date(),
+        details: {
+          txHash: tx.hash,
+          functionName,
+          valueInEth,
+          blockNumber: tx.blockNumber
+        }
+      };
+    } catch (error) {
+      logger.debug(`Error creating opportunity from tx:`, error);
+      return null;
+    }
+  }
+
+  /**
+   * Detect arbitrage opportunities between different DEXes on the same network
+   */
+  private async detectMultiDexArbitrage(
+    network: string,
+    pendingTransactions: any[]
+  ): Promise<Opportunity[]> {
+    const opportunities: Opportunity[] = [];
+    const networkDexes = this.dexes.get(network);
+
+    if (!networkDexes || networkDexes.size < 2) {
+      return opportunities; // Need at least 2 DEXes for cross-DEX arbitrage
+    }
+
+    // In a full implementation, we would:
+    // 1. Extract all token pairs being traded from pending txs
+    // 2. For each pair, get prices from all available DEXes
+    // 3. Calculate arbitrage opportunities between DEXes
+
+    // For now, we'll simulate finding some opportunities
+    const dexNames = Array.from(networkDexes.keys());
+
+    // Randomly generate some cross-DEX opportunities for demonstration
+    if (Math.random() > 0.8 && dexNames.length >= 2) {
+      // Pick two random DEXes
+      const dex1 = dexNames[Math.floor(Math.random() * dexNames.length)];
+      let dex2 = dexNames[Math.floor(Math.random() * dexNames.length)];
+      while (dex2 === dex1) {
+        dex2 = dexNames[Math.floor(Math.random() * dexNames.length)];
+      }
+
+      opportunities.push({
+        type: 'cross_dex_arbitrage',
+        network,
+        dexIn: dex1,
+        dexOut: dex2,
+        profitEstimate: Math.random() * 15, // 0-15 USD profit
+        confidence: 0.7,
+        timestamp: new Date(),
+        details: {
+          detectedFrom: 'pending_tx_analysis',
+          dexPair: [dex1, dex2]
+        }
+      });
+    }
+
+    return opportunities;
+  }
+
+  /**
+   * Detect cross-chain arbitrage opportunities
+   */
+  private async detectCrosschainOpportunities(): Promise<Opportunity[]> {
+    const opportunities: Opportunity[] = [];
+
+    if (!this.solanaConnector) return opportunities;
+
+    // In a real implementation:
+    // 1. Get prices of major tokens on EVM chains via DEXes
+    // 2. Get prices of same tokens on Solana via Jupiter/SolanaConnector
+    // 3. Calculate cross-chain arbitrage after bridging costs
+
+    // Simulate cross-chain opportunities
+    if (Math.random() > 0.75) { // 25% chance
+      opportunities.push({
+        type: 'crosschain_arbitrage',
+        profitEstimate: Math.random() * 50, // 0-50 USD profit
+        confidence: 0.5, // Lower confidence due to complexity
+        timestamp: new Date(),
+        details: {
+          chains: ['ethereum', 'solana'], // Example
+          note: 'Cross-chain opportunity detected via price discrepancy'
+        }
+      });
+    }
+
+    return opportunities;
+  }
+
+  /**
+   * Detect flash loan arbitrage opportunities
+   */
+  private async detectFlashloanOpportunities(): Promise<Opportunity[]> {
+    const opportunities: Opportunity[] = [];
+
+    // In a real implementation:
+    // 1. Check lending protocols (Aave, Morpho, Spark) for flash loan availability
+    // 2. Identify profitable arbitrage paths that can be executed via flash loans
+    // 3. Calculate net profit after flash loan fees
+
+    // Simulate flash loan opportunities
+    if (SETTINGS.enableFlashLoans && Math.random() > 0.8) { // 20% chance
+      opportunities.push({
+        type: 'flashloan_arbitrage',
+        profitEstimate: Math.random() * 100, // 0-100 USD profit (flash loans can be larger)
+        confidence: 0.4, // Lower confidence due to execution complexity
+        timestamp: new Date(),
+        details: {
+          protocols: ['aavev3', 'morpho'], // Example
+          note: 'Flash loan arbitrage opportunity detected'
+        }
+      });
+    }
+
+    return opportunities;
+  }
+
+  /**
+   * Detect perp/funding rate arbitrage opportunities
+   */
+  private async detectPerpOpportunities(): Promise<Opportunity[]> {
+    const opportunities: Opportunity[] = [];
+
+    // In a real implementation:
+    // 1. Get funding rates from perp platforms (Hyperliquid, GMX)
+    // 2. Compare with spot prices on DEXes
+    // 3. Identify opportunities to fund long/short positions
+
+    // Simulate perp opportunities
+    if (SETTINGS.enablePerpArb && Math.random() > 0.85) { // 15% chance
+      opportunities.push({
+        type: 'perp_funding_arbitrage',
+        profitEstimate: Math.random() * 25, // 0-25 USD profit
+        confidence: 0.5,
+        timestamp: new Date(),
+        details: {
+          platforms: ['hyperliquid', 'gmx'], // Example
+          note: 'Perp/funding rate arbitrage opportunity detected'
+        }
+      });
+    }
+
+    return opportunities;
+  }
+
+  /**
+   * Calculate profit for an opportunity
+   * @param opportunity - Opportunity object
+   * @returns Estimated profit in USD
+   */
+  calculateProfit(opportunity: Opportunity): number {
+    // Return the profit estimate from the opportunity, applying confidence
+    const baseProfit = opportunity.profitEstimate || 0;
+    const confidence = opportunity.confidence || 1.0;
+    return baseProfit * confidence;
+  }
+
+  /**
+   * Get price of a token pair on a specific DEX
+   * @param network - Network key
+   * @param dexName - DEX identifier (uniswapv2, uniswapv3, etc.)
+   * @param tokenIn - Input token address
+   * @param tokenOut - Output token address
+   * @param amountIn - Amount of input token
+   * @returns Amount out
+   */
+  async getPrice(
+    network: string,
+    dexName: string,
+    tokenIn: string,
+    tokenOut: string,
+    amountIn: bigint
+  ): Promise<bigint> {
+    const dexInstance = this.getDex(network, dexName);
+    if (!dexInstance) {
+      throw new Error(`DEX ${dexName} not available on network ${network}`);
+    }
+
+    return await dexInstance.getQuote(amountIn, tokenIn, tokenOut);
+  }
+
+  /**
+   * Get the best opportunity from a list
+   * @param opportunities - Array of opportunity objects
+   * @returns The opportunity with the highest profit estimate
+   */
+  getBestOpportunity(opportunities: Opportunity[]): Opportunity | null {
+    if (opportunities.length === 0) {
+      return null;
+    }
+    return opportunities.reduce((best, current) => {
+      const bestProfit = this.calculateProfit(best);
+      const currentProfit = this.calculateProfit(current);
+      return (currentProfit > bestProfit) ? current : best;
+    });
+  }
+
+  /**
+   * Get all available DEX implementations across all networks
+   */
+  getAllAvailableDexes(): Record<string, string[]> {
+    const result: Record<string, string[]> = {};
+    for (const [network, dexMap] of this.dexes.entries()) {
+      result[network] = Array.from(dexMap.keys());
+    }
+    return result;
+  }
+}
