@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🤖 ArbAiBot — AI Trading Bot for DeFi Arbitrage
+# 🤖 ArbAiBot - AI Trading Bot for DeFi Arbitrage
 
 ### AI-Powered Automatic Trading Bot · MEV Bot Arbitrage · Cross-Chain Arbitrage · Multi-DEX Crypto Trading App
 
@@ -158,7 +158,7 @@ Wallet tabs (`★ Wallet 1`, `+` to add), generate / import / MetaMask connect, 
 
 ### 1. Clone & Install
 ```bash
-git clone https://github.com/YOUR_USERNAME/arb-ai-bot.git
+git clone https://github.com/leftamber/ai-trading-bot.git
 cd arb-ai-bot
 npm install
 ```
