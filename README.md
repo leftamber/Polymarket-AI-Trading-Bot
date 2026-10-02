@@ -67,22 +67,22 @@ The bot streams every detected **arbitrage cryptocurrency** opportunity with rou
 
 ![ArbAiBot live logs — real-time crypto arbitrage opportunities detection, mempool and pool scanning](image/POC.jpg)
 
-### AI Agent — Market Analysis & One-Click Recommendations
+### AI Agent - Market Analysis & One-Click Recommendations
 Built-in **AI trading assistant** analyzes the market snapshot and proposes concrete settings changes you can apply with one click, or let it apply them itself in **automatic trading** mode:
 
 ![AI crypto trading bot — market analysis and automatic trading recommendations dashboard](image/AI.jpg)
 
-### Trading Settings — Full Control Over the Trading App
+### Trading Settings - Full Control Over the Trading App
 Trade amounts, profit thresholds, gas strategy, engine feature switches and the AI agent configuration — everything editable live, no restart needed:
 
 ![DeFi arbitrage bot trading settings — slippage, gas, profit threshold, flash loans, AI provider configuration](image/Trading%20Settings.jpg)
 
-### Networks & Protocols — Your Own "Best Exchange" Mix
+### Networks & Protocols - Your Own "Best Exchange" Mix
 Add RPC nodes, watched tokens, DEX factories/routers and aggregator quote sources per network. Build your own routing across the **best crypto coin exchange** contracts:
 
 ![Multi-chain DEX arbitrage network settings — RPC, watched tokens, Uniswap V2/V3 factory and router configuration](image/Network%20Settings.jpg)
 
-### Wallet Settings — Multi-Wallet Management
+### Wallet Settings - Multi-Wallet Management
 Wallet tabs (`★ Wallet 1`, `+` to add), generate / import / MetaMask connect, private key & seed phrase storage, and **per-wallet trading settings**:
 
 ![Crypto bot multi-wallet management — wallet tabs with per-wallet arbitrage settings, seed phrase and MetaMask support](image/wallet%20settins.png)
