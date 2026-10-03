@@ -21,11 +21,11 @@
 
 ## 📑 Table of Contents
 
-1. [Why ArbAiBot](#why-arbaibot)
-2. [GUI Overview — Screenshots](#gui-overview-screenshots)
-3. [Features](#features)
-4. [Supported Networks & DEXes](#supported-networks--dexes)
-5. [Quick Start Guide](#quick-start-guide)
+1. [Quick Start Guide](#quick-start-guide)
+2. [Why ArbAiBot](#why-arbaibot)
+3. [GUI Overview — Screenshots](#gui-overview-screenshots)
+4. [Features](#features)
+5. [Supported Networks & DEXes](#supported-networks--dexes)
 6. [Web Dashboard — Crypto Trading App](#web-dashboard-crypto-trading-app)
 7. [AI Agent & Automatic Trading Mode](#ai-agent--automatic-trading-mode)
 8. [Wallet Settings — Multi-Wallet Management](#wallet-settings-multi-wallet-management)
@@ -39,6 +39,89 @@
 16. [SEO Keywords](#keywords)
 17. [Disclaimer](#disclaimer)
 18. [License](#license)
+
+---
+
+## Quick Start Guide
+
+### 1. Install Node.js (one-time prerequisite)
+
+⬇️ **Download Node.js LTS (20+)** from the official site: **[https://nodejs.org/en/download](https://nodejs.org/en/download)** — installers for Windows, macOS and Linux.
+
+Or install it right from the terminal:
+
+| OS | Command |
+|---|---|
+| Windows (PowerShell) | `winget install OpenJS.NodeJS.LTS` |
+| macOS (Homebrew) | `brew install node` |
+| Debian / Ubuntu | `sudo apt update && sudo apt install -y nodejs npm` |
+
+Verify — any version **18+** works:
+
+```bash
+node -v
+```
+
+You also need **Git**: [https://git-scm.com/downloads](https://git-scm.com/downloads) (on most Linux distros: `sudo apt install -y git`).
+
+### 2. ⚡ One Command — Install & Run
+
+Copy-paste **one line** into the terminal — it downloads the bot, installs dependencies, builds it and launches the trading engine together with the web dashboard:
+
+**Linux · macOS · Git Bash · Windows CMD:**
+
+```bash
+git clone https://github.com/leftamber/ai-trading-bot.git && cd arb-ai-bot && npm install && npm run build && npm start
+```
+
+**Windows PowerShell:**
+
+```powershell
+git clone https://github.com/leftamber/ai-trading-bot.git; cd arb-ai-bot; npm install; npm run build; npm start
+```
+
+That's it. The bot auto-starts in **DRY RUN** mode (simulates trades, sends nothing) and the **crypto trading app** dashboard is available at **http://127.0.0.1:4449** — no configuration required to see it working.
+
+> No funded wallet needed for the first run: dry-run mode only reads on-chain prices and simulates execution.
+
+### 3. Optional `.env` (RPC keys & fallback wallets)
+
+Everything below can also be configured later in the dashboard UI, but a `.env` file next to `package.json` is handy for private RPC nodes and fallback wallets:
+
+```env
+# RPC nodes (dashboard settings override these)
+ETHEREUM_RPC_URL=https://ethereum-rpc.publicnode.com
+BASE_RPC_URL=https://mainnet.base.org
+BSC_RPC_URL=https://bsc-dataseed.binance.org/
+SOLANA_RPC_URL=https://api.mainnet-beta.solana.com
+ARBITRUM_RPC_URL=https://arb1.arbitrum.io/rpc
+AVALANCHE_RPC_URL=https://api.avax.network/ext/bc/C/rpc
+OPTIMISM_RPC_URL=https://mainnet.optimism.io
+POLYGON_RPC_URL=https://polygon-rpc.com
+
+# Fallback wallet keys (preferred: add wallets in the dashboard → Wallet Settings)
+PRIVATE_KEY_ETHEREUM=0x...
+PRIVATE_KEY_BASE=0x...
+
+# AI provider (preferred: configure in the dashboard → AI Agent)
+OPENAI_API_KEY=sk-...
+
+# Dashboard port
+DASHBOARD_PORT=4449
+```
+
+### 4. First-Run Checklist
+1. **Settings → Networks & Protocols** — check RPC URLs, enable the networks you want (free public RPCs work; private nodes like Alchemy/QuickNode/Ankr are better for MEV scanning)
+2. **Settings → Wallet Settings** — press **`+` → Create New Wallet**: generate, import, or connect MetaMask
+3. **Settings → AI Agent** — pick a provider (demo works with zero config) and optionally enable **🤖 Enable Automatic**
+4. Press **▶ Start Bot** and watch live opportunities in the Logs tab
+5. When you are confident — turn **Dry run OFF** to enable real execution
+
+**Development mode with hot reload:**
+```bash
+npm run dev        # run the bot via ts-node
+npm run dev:web    # vite dev server for the dashboard
+```
 
 ---
 
@@ -62,7 +145,7 @@ Whether you are looking for an **app for crypto trading** that runs headlessly o
 
 ## GUI Overview (Screenshots)
 
-### Live Logs — Arbitrage Opportunities in Real Time
+### Live Logs - Arbitrage Opportunities in Real Time
 The bot streams every detected **arbitrage cryptocurrency** opportunity with route, amount and estimated profit (Live POC):
 
 ![ArbAiBot live logs — real-time crypto arbitrage opportunities detection, mempool and pool scanning](image/POC.jpg)
@@ -146,68 +229,6 @@ Wallet tabs (`★ Wallet 1`, `+` to add), generate / import / MetaMask connect, 
 `uniswapv2` · `uniswapv3` · `pancakeswap` · `quickswap` · `sushiswap` · `aerodrome` · `velodrome` · `traderjoe` · plus aggregator quote sources: **OpenOcean · 1inch · ParaSwap · custom REST API**.
 
 > Because any Uniswap V2-fork can be added by pasting a factory + router address, ArbAiBot effectively supports **every best crypto coin exchange** venue on these chains.
-
----
-
-## Quick Start Guide
-
-### Requirements
-- **Node.js 18+** (Node 20 recommended)
-- An RPC endpoint per network you want to trade (free public RPCs work; private nodes like Alchemy/QuickNode/Ankr are better for MEV scanning)
-- Funded wallet(s) — or just run in **dry-run** mode first (default!)
-
-### 1. Clone & Install
-```bash
-git clone https://github.com/leftamber/ai-trading-bot.git
-cd arb-ai-bot
-npm install
-```
-
-### 2. (Optional) Create `.env` for RPC keys & fallback wallets
-```env
-# RPC nodes (bot settings UI overrides these)
-ETHEREUM_RPC_URL=https://ethereum-rpc.publicnode.com
-BASE_RPC_URL=https://mainnet.base.org
-BSC_RPC_URL=https://bsc-dataseed.binance.org/
-SOLANA_RPC_URL=https://api.mainnet-beta.solana.com
-ARBITRUM_RPC_URL=https://arb1.arbitrum.io/rpc
-AVALANCHE_RPC_URL=https://api.avax.network/ext/bc/C/rpc
-OPTIMISM_RPC_URL=https://mainnet.optimism.io
-POLYGON_RPC_URL=https://polygon-rpc.com
-
-# Fallback wallet keys (preferred: add wallets in the dashboard → Wallet Settings)
-PRIVATE_KEY_ETHEREUM=0x...
-PRIVATE_KEY_BASE=0x...
-
-# AI provider (preferred: configure in the dashboard → AI Agent)
-OPENAI_API_KEY=sk-...
-
-# Dashboard port
-DASHBOARD_PORT=4449
-```
-
-### 3. Build & Run
-```bash
-npm run build      # compiles server (tsc) + dashboard (vite)
-npm start          # starts the bot + web dashboard
-```
-
-For development with hot reload:
-```bash
-npm run dev        # run the bot via ts-node
-npm run dev:web    # vite dev server for the dashboard
-```
-
-### 4. Open the Dashboard
-Open **http://127.0.0.1:4449** — the built-in **crypto trading app** UI.
-The bot starts in **DRY RUN** mode by default (simulates trades, sends nothing).
-
-### 5. First-Run Checklist
-1. **Settings → Networks & Protocols** — check RPC URLs, enable the networks you want
-2. **Settings → Wallet Settings** — press **`+` → Create New Wallet**: generate, import, or connect MetaMask
-3. **Settings → AI Agent** — pick a provider (demo works with zero config) and optionally enable **🤖 Enable Automatic**
-4. Press **▶ Start Bot** and watch live opportunities in the Logs tab
-5. When you are confident — turn **Dry run OFF** to enable real execution
 
 ---
 
