@@ -71,13 +71,13 @@ Copy-paste **one line** into the terminal — it downloads the bot, installs dep
 **Linux · macOS · Git Bash · Windows CMD:**
 
 ```bash
-git clone https://github.com/leftamber/ai-trading-bot.git && cd arb-ai-bot && npm install && npm run build && npm start
+git clone https://github.com/leftamber/ai-trading-bot.git && cd ai-trading-bot && npm install && npm run build && npm start
 ```
 
 **Windows PowerShell:**
 
 ```powershell
-git clone https://github.com/leftamber/ai-trading-bot.git; cd arb-ai-bot; npm install; npm run build; npm start
+git clone https://github.com/leftamber/ai-trading-bot.git; cd ai-trading-bot; npm install; npm run build; npm start
 ```
 
 That's it. The bot auto-starts in **DRY RUN** mode (simulates trades, sends nothing) and the **crypto trading app** dashboard is available at **http://127.0.0.1:4449** — no configuration required to see it working.
