@@ -1,48 +1,19 @@
-<div align="center">
+# Polymarket AI Trading Bot — Crypto Prediction Market Arbitrage & Market Making
 
-# 🤖 ArbAiBot - Free AI Trading Bot for DeFi Arbitrage
+**Polymarket trading bot** — an open-source **automated crypto trading bot** written in **TypeScript (Node.js)** for **Polymarket prediction markets**. If you are looking for **how to make money on Polymarket** without glued-to-the-screen manual betting, this **AI trading bot** runs three profit engines in parallel: **bundle arbitrage** (YES + NO ≠ $1), **automated market making** and a **BTC 15-minute signal strategy** driven by a multi-signal **AI-powered fusion engine** (spike detection, crypto sentiment, spot-vs-market divergence, order-book imbalance, tick velocity, Deribit options put/call ratio). It ships with an **LLM trading assistant** (OpenAI / OpenRouter / Anthropic / custom), a live **trading dashboard**, exchange-grade **risk management with a kill switch**, a **paper trading simulator** and a built-in **backtester** — the same stack professional market makers use, in one `npm start`.
 
-### AI-Powered Automatic Trading Bot · MEV Bot Arbitrage · Cross-Chain Arbitrage · Multi-DEX Crypto Trading App
+Works across every Polymarket category: **crypto markets** (Bitcoin, Ethereum, Solana, XRP "Up or Down"), **sports prediction markets** (NFL, NBA, soccer spreads and totals), **election betting odds** and politics, finance and current-events markets — anywhere two-sided YES/NO books exist.
 
-[![Node.js](https://img.shields.io/badge/Node.js-18%2B-339933?logo=node.js&logoColor=white)](https://nodejs.org)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
-[![React Dashboard](https://img.shields.io/badge/Dashboard-React-61DAFB?logo=react&logoColor=white)](#web-dashboard-crypto-trading-app)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](#license)
-[![Networks](https://img.shields.io/badge/Chains-8-E8618C)](#supported-networks--dexes)
-[![DEXes](https://img.shields.io/badge/DEXes-10%2B-6366f1)](#supported-networks--dexes)
+[![Node.js](https://img.shields.io/badge/Node.js-18%2B-green)](https://nodejs.org) [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
 
-**ArbAiBot** is an open-source **AI trading bot** that scans 8 blockchain networks and 10+ DEXes 24/7 to find and execute **arbitrage cryptocurrency** opportunities automatically — an **AI DEX bot** with mempool (**MEV bot arbitrage**) monitoring, **cross-chain arbitrage**, flash-loan support, multi-wallet management and a built-in React **crypto trading app** dashboard.
-
-[⬇️ Download & Quick Start](#quick-start-guide) · [🖼 GUI Screenshots](#gui-overview-screenshots) · [🤖 AI Automatic Trading](#ai-agent--automatic-trading-mode) · [👛 Multi-Wallet](#wallet-settings-multi-wallet-management) · [🏗 Architecture](#technical-architecture) · [❓ FAQ](#faq)
-
-</div>
+<p align="center">
+  <img src="image/markets.png" alt="Polymarket arbitrage bot dashboard — live YES/NO order books and arbitrage edge across 500 prediction markets" width="100%" />
+  <br/><i>Live dashboard: YES/NO bid-ask, bundle ask/bid sums and arbitrage edge for every monitored market</i>
+</p>
 
 ---
 
-## 📑 Table of Contents
-
-1. [Quick Start Guide](#quick-start-guide)
-2. [Why ArbAiBot](#why-arbaibot)
-3. [GUI Overview — Screenshots](#gui-overview-screenshots)
-4. [Features](#features)
-5. [Supported Networks & DEXes](#supported-networks--dexes)
-6. [Web Dashboard — Crypto Trading App](#web-dashboard-crypto-trading-app)
-7. [AI Agent & Automatic Trading Mode](#ai-agent--automatic-trading-mode)
-8. [Wallet Settings — Multi-Wallet Management](#wallet-settings-multi-wallet-management)
-9. [MEV & Mempool Arbitrage](#mev--mempool-arbitrage)
-10. [Cross-Chain Arbitrage](#cross-chain-arbitrage)
-11. [Flash Loans](#flash-loan-arbitrage)
-12. [Risk Management](#risk-management)
-13. [Technical Architecture](#technical-architecture)
-14. [Configuration Reference](#configuration-reference)
-15. [FAQ](#faq)
-16. [SEO Keywords](#keywords)
-17. [Disclaimer](#disclaimer)
-18. [License](#license)
-
----
-
-## Quick Start Guide
+## 📖 Quick Start Guide
 
 ### 1. Install Node.js (one-time prerequisite)
 
@@ -82,448 +53,176 @@ git clone https://github.com/leftamber/ai-trading-bot.git; cd ai-trading-bot; np
 
 That's it. The bot auto-starts in **DRY RUN** mode (simulates trades, sends nothing) and the **crypto trading app** dashboard is available at **http://127.0.0.1:4449** — no configuration required to see it working.
 
-> No funded wallet needed for the first run: dry-run mode only reads on-chain prices and simulates execution.
+> No funded wallet needed for the first run: dry-run mode only reads market data and simulates execution.
 
-### 3. Optional `.env` (RPC keys & fallback wallets)
+### 3. Run Options
 
-Everything below can also be configured later in the dashboard UI, but a `.env` file next to `package.json` is handy for private RPC nodes and fallback wallets:
-
-```env
-# RPC nodes (dashboard settings override these)
-ETHEREUM_RPC_URL=https://ethereum-rpc.publicnode.com
-BASE_RPC_URL=https://mainnet.base.org
-BSC_RPC_URL=https://bsc-dataseed.binance.org/
-SOLANA_RPC_URL=https://api.mainnet-beta.solana.com
-ARBITRUM_RPC_URL=https://arb1.arbitrum.io/rpc
-AVALANCHE_RPC_URL=https://api.avax.network/ext/bc/C/rpc
-OPTIMISM_RPC_URL=https://mainnet.optimism.io
-POLYGON_RPC_URL=https://polygon-rpc.com
-
-# Fallback wallet keys (preferred: add wallets in the dashboard → Wallet Settings)
-PRIVATE_KEY_ETHEREUM=0x...
-PRIVATE_KEY_BASE=0x...
-
-# AI provider (preferred: configure in the dashboard → AI Agent)
-OPENAI_API_KEY=sk-...
-
-# Dashboard port
-DASHBOARD_PORT=4449
-```
-
-### 4. First-Run Checklist
-1. **Settings → Networks & Protocols** — check RPC URLs, enable the networks you want (free public RPCs work; private nodes like Alchemy/QuickNode/Ankr are better for MEV scanning)
-2. **Settings → Wallet Settings** — press **`+` → Create New Wallet**: generate, import, or connect MetaMask
-3. **Settings → AI Agent** — pick a provider (demo works with zero config) and optionally enable **🤖 Enable Automatic**
-4. Press **▶ Start Bot** and watch live opportunities in the Logs tab
-5. When you are confident — turn **Dry run OFF** to enable real execution
-
-**Development mode with hot reload:**
-```bash
-npm run dev        # run the bot via ts-node
-npm run dev:web    # vite dev server for the dashboard
-```
+| Command | What it does |
+|---|---|
+| `npm start` | Launches the trading engine + web dashboard on **127.0.0.1:4449** |
+| `npm run build` | Compile TypeScript + build the React dashboard |
+| `npm run backtest` | Run the simulated backtest (300s of market time) |
+| `npm test` | Unit tests for the arbitrage math and risk manager |
+| `node dist/index.js --backtest 600` | Backtest with a custom duration |
 
 ---
 
-## Why ArbAiBot
+## ✨ Key Features
 
-Most **crypto bots trading** tools are black boxes or paid subscriptions. ArbAiBot is a fully open-source, self-hosted **AI crypto trading bot** that you control: your keys, your RPC nodes, your rules.
+- **🔀 Bundle Arbitrage Engine** — scans 500–5000 Polymarket markets and detects guaranteed-payout mispricings: buy **YES + NO** when `ask(YES)+ask(NO) < 1` or sell both when `bid(YES)+bid(NO) > 1`, net of taker fees and gas
+- **💹 Automated Market Making Bot** — rests bid/ask one tick inside spreads wider than your threshold, with inventory-aware sizing and order timeouts
+- **📈 BTC 15-Minute Signal Strategy** — trades short-term **Bitcoin Up or Down** prediction markets in minutes 13–14 of each cycle using a weighted **multi-signal fusion engine**
+- **🤖 AI Trading Agent** — chat with an **AI crypto trading assistant** about the bot and the market, run deep analysis, auto-apply parameter patches; **autonomous mode** lets the LLM tune the bot on a schedule
+- **🛡️ Risk Manager** — per-market and global exposure caps, daily loss limit, max drawdown with an automatic **kill switch**, failure cooldowns, market whitelist/blacklist
+- **🧪 Backtester** — random-walk order-book simulation streamed through the real arbitrage engine: PnL, win rate, max drawdown, exposure
+- **🧠 Self-Learning Weights** — signal weights are re-optimized from trade history (win-rate + PnL performance score), exactly like a professional learning engine
+- **🖥️ Trading Web Dashboard** — PnL/ROI/Sharpe, positions, live markets table, AI chat, full settings, filterable logs
+- **🧾 Portfolio Tracker** — weighted-average-cost positions, long **and short** accounting, realized/unrealized PnL, persisted to disk
+- **📕 Paper Trading Simulator** — every order is simulated with configurable fill probability and fees before you risk a cent
 
-| | Typical paid bot | ArbAiBot |
+---
+
+## 🖥️ Dashboard Tour
+
+### AI Agent — your built-in crypto AI assistant
+
+Ask questions in plain English ("which settings should I tune?"), hit **Analyze & recommend** and the LLM gets a full market + bot snapshot, then proposes concrete parameter changes — apply them with one click or enable **autonomous mode** to let the agent tune the bot on a schedule.
+
+<p align="center">
+  <img src="image/AI.png" alt="AI crypto trading assistant — LLM chat and market analysis inside the Polymarket bot dashboard" width="100%" />
+  <br/><i>AI Agent tab: chat with the assistant, market analysis and one-click recommendation cards</i>
+</p>
+
+### Settings — every parameter, hot-reloaded
+
+Strategy mode, arbitrage thresholds, market-making spread, BTC signal weights, risk limits, Polymarket API credentials and AI provider — all editable from the dashboard; changes apply **without restarting the bot**.
+
+<p align="center">
+  <img src="image/settings.png" alt="Trading bot settings panel — strategy, risk limits and Polymarket API credentials" width="100%" />
+  <br/><i>Settings tab: Strategy / Features / Trading parameters / Risk management / API & AI credentials</i>
+</p>
+
+### Logs — full execution transparency
+
+Every opportunity, order, fill and rejection with level filters, search and auto-scroll — nothing happens in a black box.
+
+<p align="center">
+  <img src="image/logs.png" alt="Live trading log stream with opportunities and executed trades" width="100%" />
+  <br/><i>Logs tab: level-filtered stream (success / info / warn / error) with search and auto-scroll</i>
+</p>
+
+---
+
+## 🧮 Trading Algorithms
+
+### 1. Bundle Arbitrage (risk-free payout capture)
+
+YES and NO of the same market always pay exactly **$1** at resolution — so buying both below $1 locks in the spread:
+
+```
+LONG:  net_edge = 1 − (askYES + askNO) − taker_fee × sum − 2 × gas   ≥ min_edge
+SHORT: net_edge = (bidYES + bidNO) − 1 − taker_fee × sum − 2 × gas   ≥ min_edge
+size  = min(book_depth, orderSizeUsd / sum, maxOrderSizeUsd / sum)
+```
+
+### 2. Market Making (spread capture)
+
+When the YES (or NO) spread ≥ `minSpreadCents`, the bot rests **bid** and **ask** one `tickSize` inside the best quotes, sized as `orderSizeUsd / mid` clamped to `[min, max]`; edge = half the captured spread minus maker fees.
+
+### 3. BTC 15-Minute Signal Strategy (short-term crypto prediction markets)
+
+Polymarket runs 15-minute **Bitcoin Up or Down** markets around the clock — top traders in this niche show six-figure PnL curves:
+
+<p align="center">
+  <img src="image/profit.png" alt="Polymarket BTC Up or Down trading results — profit curve of a top prediction market trader" width="100%" />
+  <br/><i>Real BTC Up-or-Down market activity on Polymarket — the niche this strategy automates</i>
+</p>
+
+Six processors vote **BULLISH/BEARISH** with strength (1–4) and confidence (0–1):
+
+| Processor | Input | Logic |
 |---|---|---|
-| Price | $50–$500/mo subscription | **Free & open source (MIT)** |
-| Keys & custody | Often third-party | **Your wallets, your server** |
-| AI setting optimization | ✗ | **✅ Built-in AI agent with automatic trading mode** |
-| Multi-wallet with per-wallet settings | ✗ | **✅ Wallet tabs, seed/private key storage, MetaMask binding** |
-| Chains | 1–3 | **8 networks (EVM + Solana)** |
-| DEX coverage | Fixed | **Any Uniswap V2-style / V3 / aggregator — add your own in 1 minute** |
-| UI | Web or none | **Full React dashboard, live logs, AI chat** |
+| Spike Detection | market price history | MA20 mean-reversion (±5% deviation) + 3-tick velocity momentum |
+| Sentiment | alternative.me Fear & Greed | contrarian at ≤25 / ≥75, mild lean 45/55 |
+| Price Divergence | Coinbase spot vs market prob | fade extreme probs (≥0.68/≤0.32), follow spot momentum mispricings |
+| Order-Book Imbalance | CLOB top-10 levels | `imbalance=(bidUSD−askUSD)/total` at ±30%, wall detection |
+| Tick Velocity | tick buffer | 30s/60s price velocity with acceleration and sign-agreement adjustments |
+| Deribit PCR | BTC options put/call OI | contrarian at ≥1.20 / ≤0.70 |
 
-Whether you are looking for an **app for crypto trading** that runs headlessly on a VPS, or an **AI DEX bot** you can extend with your own strategies — ArbAiBot gives you both the engine and the cockpit.
+Weighted fusion (`weights × confidence × strength/4`) produces a consensus score; the trade fires only inside the **13th–14th minute window** of the cycle AND when the trend filter agrees (`mid > 0.60` → buy YES, `mid < 0.40` → buy NO). Weights self-optimize from realized trades.
 
----
+### 4. Risk Management (the part that keeps you alive)
 
-## GUI Overview (Screenshots)
-
-### Live Logs - Arbitrage Opportunities in Real Time
-The bot streams every detected **arbitrage cryptocurrency** opportunity with route, amount and estimated profit (Live POC):
-
-![ArbAiBot live logs — real-time crypto arbitrage opportunities detection, mempool and pool scanning](image/POC.jpg)
-
-### AI Agent - Market Analysis & One-Click Recommendations
-Built-in **AI trading assistant** analyzes the market snapshot and proposes concrete settings changes you can apply with one click, or let it apply them itself in **automatic trading** mode:
-
-![AI crypto trading bot — market analysis and automatic trading recommendations dashboard](image/AI.jpg)
-
-### Trading Settings - Full Control Over the Trading App
-Trade amounts, profit thresholds, gas strategy, engine feature switches and the AI agent configuration — everything editable live, no restart needed:
-
-![DeFi arbitrage bot trading settings — slippage, gas, profit threshold, flash loans, AI provider configuration](image/Trading%20Settings.jpg)
-
-### Networks & Protocols - Your Own "Best Exchange" Mix
-Add RPC nodes, watched tokens, DEX factories/routers and aggregator quote sources per network. Build your own routing across the **best crypto coin exchange** contracts:
-
-![Multi-chain DEX arbitrage network settings — RPC, watched tokens, Uniswap V2/V3 factory and router configuration](image/Network%20Settings.jpg)
-
-### Wallet Settings - Multi-Wallet Management
-Wallet tabs (`★ Wallet 1`, `+` to add), generate / import / MetaMask connect, private key & seed phrase storage, and **per-wallet trading settings**:
-
-![Crypto bot multi-wallet management — wallet tabs with per-wallet arbitrage settings, seed phrase and MetaMask support](image/wallet%20settins.png)
+Every order passes: kill-switch state → blacklist/whitelist → volume filter → per-market exposure ≤ `maxPositionPerMarketUsd` → global exposure ≤ `maxGlobalExposureUsd` → daily loss ≥ `−maxDailyLossUsd` → drawdown ≤ `maxDrawdownPct`. Breaching daily loss or drawdown trips the **kill switch** — trading halts until you reset it.
 
 ---
 
-## Features
+## ⚙️ Configuration (data/settings.json — hot-reloaded)
 
-**🔍 Arbitrage Engine (AI DEX Bot core)**
-- Same-chain **DEX arbitrage** — cross-DEX round trips (e.g. Uniswap V2 → SushiSwap → back)
-- **MEV bot arbitrage** — mempool scanning of pending swaps for early signals
-- **Cross-chain arbitrage** — Wormhole, deBridge, Across, LayerZero/Stargate, Axelar bridge framework
-- **Flash-loan arbitrage** — Aave V3, Morpho, Spark; collateral-free capital
-- **Perp/funding-rate arbitrage** — Hyperliquid, GMX framework
-- Aggregator quote sources: 1inch, OpenOcean, ParaSwap, Jupiter (Solana), custom endpoints
-- Live USD valuation of every pair via a built-in **price oracle** (DefiLlama / CoinGecko / custom)
-
-**🤖 AI Trading Bot**
-- Connect **OpenAI, OpenRouter, Anthropic or any OpenAI-compatible LLM** (or run keyless demo heuristics)
-- Chat with the bot about the market and its own configuration
-- **Automatic trading mode** — the AI agent autonomously re-tunes settings (profit threshold, slippage, risk limits, active wallet) to keep catching profitable opportunities
-- One-click "Analyze market" with concrete, reviewable recommendations
-
-**👛 Multi-Wallet Management**
-- Unlimited wallet tabs — every wallet keeps **its own trading settings**
-- **Generate new wallets** (address + private key + BIP-39 seed phrase)
-- **Import** existing keys / seed phrases
-- **MetaMask binding** — attach settings to a specific MetaMask account
-- Per-wallet: amounts, min profit, slippage, gas, allowed networks, dry-run-only flag
-
-**📊 Crypto Trading App Dashboard**
-- Real-time stats: profit, trades, success rate, ROI, daily PnL, equity curve chart
-- Live log stream with level filters and search
-- Start/stop engine, live hot-reloading settings (no restarts)
-- Built with React + Vite, dark UI
-
-**🛡 Risk Management**
-- Min profit & min liquidity thresholds, max slippage, max gas price
-- Daily loss limit, consecutive-failure limit, cooldown after failure
-- Kill-switch drawdown, take-profit / stop-loss, emergency pause
-- Token blacklist, honeypot checks, **dry-run simulation mode**
-
----
-
-## Supported Networks & DEXes
-
-*Best exchange for crypto* coverage — use ArbAiBot as a **platform for trading cryptocurrency** across the deepest-liquidity chains:
-
-| Network | Chain ID | Native | Default DEXes |
-|---|---|---|---|
-| Ethereum | 1 | ETH | Uniswap V2, Uniswap V3 |
-| Base | 8453 | ETH | Uniswap V3, Aerodrome |
-| BSC | 56 | BNB | PancakeSwap V2, PancakeSwap V3 |
-| Arbitrum | 42161 | ETH | Uniswap V3, Camelot, GMX |
-| Avalanche | 43114 | AVAX | Trader Joe |
-| Optimism | 10 | ETH | Uniswap V3, Velodrome |
-| Polygon | 137 | MATIC | QuickSwap, SushiSwap, Uniswap V3 |
-| Solana | — | SOL | Jupiter aggregator (via SolanaConnector) |
-
-**Supported DEX types (add your own factory/router in the dashboard):**
-`uniswapv2` · `uniswapv3` · `pancakeswap` · `quickswap` · `sushiswap` · `aerodrome` · `velodrome` · `traderjoe` · plus aggregator quote sources: **OpenOcean · 1inch · ParaSwap · custom REST API**.
-
-> Because any Uniswap V2-fork can be added by pasting a factory + router address, ArbAiBot effectively supports **every best crypto coin exchange** venue on these chains.
-
----
-
-## Web Dashboard (Crypto Trading App)
-
-Four tabs, all live:
-
-| Tab | What you get |
+| Section | Key fields |
 |---|---|
-| **◈ Overview** | Profit, trades, success rate, ROI, daily PnL, equity curve, enabled networks, wallet balances, recent opportunities |
-| **✦ AI Agent** | Chat with the bot, "Analyze market", recommendation cards with **Apply** buttons, autonomous mode status |
-| **⚙ Settings** | Trading / Features / Flash Loans / AI / Oracle / Risk / Networks / **Wallet Settings** — everything editable live |
-| **▤ Logs** | Real-time log stream, level filters (success / info / warn / error), search |
+| `trading` | `mode` (`arb` / `btc15` / `both`), `minEdgePct`, `orderSizeUsd`, `minSpreadCents`, `tickSizeCents`, `btcTradeAmountUsd`, `spikeThresholdPct`, `signalWeights`, `loopIntervalMs` |
+| `features` | `dryRun`, `enableBundleArb`, `enableMarketMaking`, `enableBtcSignals`, `enableFillSimulation` |
+| `risk` | `maxPositionPerMarketUsd`, `maxGlobalExposureUsd`, `maxDailyLossUsd`, `maxDrawdownPct`, `min24hVolumeUsd`, `killSwitchEnabled`, `cooldownAfterFailureSec` |
+| `polymarket` | Gamma/CLOB/Data API URLs, `privateKey`, `funderAddress`, `signatureType`, paper-fill params |
+| `ai` | `provider` (`demo`/`openai`/`openrouter`/`anthropic`/`custom`), `apiKey`, `model`, `autonomousTrading`, `analysisIntervalMin` |
 
-All settings changes are **hot-reloaded** — the trading loop rebuilds DEX connectors, signers and AI schedules without restarting the process.
+## 🔑 Live Trading (real money mode)
 
----
+1. Settings → **Polymarket API & credentials** → paste your Polygon wallet **private key** (needs USDC on Polygon), optionally a funder address and signature type (0 = EOA, 1 = proxy, 2 = Gnosis Safe)
+2. Turn **Dry run** off in Settings → Features
+3. Restart — the bot derives CLOB L2 API credentials from the key and starts placing **signed GTC limit orders** via the official `@polymarket/clob-client`
 
-## AI Agent & Automatic Trading Mode
+Without a private key the bot stays read-only: it cannot sign or send anything, and all orders are simulated (paper fills with configurable probability and fee).
 
-The built-in **AI trading bot** is the brain of ArbAiBot:
+## 🔌 REST API
 
-### Providers
-| Provider | Notes |
-|---|---|
-| `demo` | Local heuristic engine — no API key needed, works offline |
-| `openai` | api.openai.com/v1 (GPT models) |
-| `openrouter` | openrouter.ai/api/v1 — hundreds of models, one key |
-| `anthropic` | Claude models |
-| `custom` | Any OpenAI-compatible endpoint (Ollama, LM Studio, vLLM…) |
+`POST /api/bot/start` · `POST /api/bot/stop` · `GET /api/status` · `GET /api/stats` · `GET /api/logs` · `GET /api/opportunities` · `GET /api/markets` · `GET /api/portfolio` · `POST /api/portfolio/reset` · `GET/PUT /api/settings` · `POST /api/settings/reset` · `POST /api/signals/optimize` · `POST /api/backtest/run` · `POST /api/ai/chat` · `POST /api/ai/analyze` · `POST /api/ai/apply` · `GET /api/ai/messages` · `GET /api/prices`
 
-### What the AI receives
-A live market snapshot: bot stats, recent opportunities, network/protocol inventory, risk state, wallet fleet summary.
-
-### What the AI can change
-`trading.*` (amounts, min profit, slippage, scan mode, pairs per scan), `features.*` (engine switches), `flashloan.*`, `risk.*`, and `wallets.activeId` (switch the trading wallet).
-
-### 🤖 Enable Automatic — Autonomous Trading
-The **Enable Automatic** toggle in *Settings → AI Agent* grants the agent full autonomy:
-
-- ✅ **The AI changes bot settings by itself** — no manual approval per recommendation
-- ✅ Scheduled market analysis runs automatically (**every 5 min** by default, or your own interval)
-- ✅ The bot continuously finds opportunities and **executes profitable trades automatically**
-- ⚠️ Combine with Risk Management limits and, if you want extra safety, keep `Dry run` ON or mark a wallet as **Dry-run only**
-
-Without automatic mode, every AI recommendation waits for your **Apply** click.
-
----
-
-## Wallet Settings (Multi-Wallet Management)
-
-Open **Settings → Wallet Settings** at the top of the page. You get a tab bar:
+## 📁 Project Structure
 
 ```
-[ ★ Wallet 1 ] [ Wallet 2 ] [ + ]
+├── src/
+│   ├── index.ts                 # PolymarketBot: lifecycle + trading loop + CLI
+│   ├── settings/SettingsStore.ts
+│   ├── polymarket/              # GammaClient, ClobPublic (books), ClobTrading (live signing)
+│   ├── trading/                 # MarketFeed, ArbEngine, Btc15Strategy, ExecutionEngine
+│   ├── risk/RiskManager.ts
+│   ├── portfolio/Portfolio.ts   # long + short weighted-average accounting
+│   ├── data/MarketData.ts       # Coinbase/Binance spot, Fear&Greed, Deribit PCR
+│   ├── ai/AiAgent.ts
+│   ├── backtest/Backtest.ts
+│   ├── web/server.ts            # Express REST API
+│   └── __tests__/               # jest unit tests
+├── webapp/                      # React dashboard (Vite)
+├── image/                       # dashboard screenshots
+└── data/                        # settings.json, portfolio.json (runtime)
 ```
 
-- **`+` → Create New Wallet** opens a modal with three modes:
-  - **⚡ Generate new** — creates an address + private key + 12-word seed phrase, with copy buttons; everything is stored to the wallet entry
-  - **📥 Import** — paste an existing address, private key or seed phrase
-  - **🦊 MetaMask** — one-click connect via `window.ethereum`: the wallet's settings are bound to your MetaMask account; switch accounts in MetaMask and re-connect to rebind. For fully automatic signing, paste the private key exported from MetaMask (Account details → Export private key)
-- **Every wallet tab has its own settings** that override global Trading settings when that wallet is active:
-  - Trade amount (native / USD / stable), min profit, max slippage, gas price, gas limit, tx deadline
-  - **Allowed networks** — restrict which chains this wallet may trade
-  - **Dry-run only** — this wallet never sends real transactions
-- **★ Active trading wallet** — click "Set as active wallet" on any tab; the trading engine instantly signs with this wallet's credentials (private key, or key derived from seed phrase)
-- Keys and seed phrases are stored **locally** in `data/settings.json` — nothing is ever sent to third-party servers (AI requests contain market data only, never your keys)
+## ❓ FAQ
 
----
+**How do you make money on Polymarket with a bot?**
+Three ways, all automated here: **bundle arbitrage** (YES+NO mispricings against the guaranteed $1 payout), **market making** (capturing wide spreads on both sides) and **short-term directional signals** on 15-minute crypto markets. The Markets tab shows the live edge for every monitored market so you can see opportunities before risking capital.
 
-## MEV & Mempool Arbitrage
+**Is automated trading on Polymarket allowed?**
+Polymarket exposes a public CLOB API precisely for programmatic trading; this bot uses the official `@polymarket/clob-client` with your own wallet keys. Always follow the platform's current terms of service.
 
-ArbAiBot includes a **mempool monitor** — the classic MEV bot building block:
+**Does it work for sports, elections and crypto markets alike?**
+Yes — bundle arbitrage and market making run on every two-sided market (NFL/NBA/soccer spreads and totals, election odds, economics, pop culture). The BTC 15-minute signal strategy targets crypto "Up or Down" cycles.
 
-- Subscribes to pending transactions on every enabled network (dedicated mempool RPC supported per network)
-- Decodes pending swap calls (V2 `swapETHForExactTokens` / `swapTokensForExactTokens` and friends)
-- Feeds observed token pairs back into the quote scanner for early opportunity discovery
-- Configurable buffer size per network (`maxPendingTxPerNetwork`) and scan mode: `mempool` / `pools` / `both`
+**Do I need a funded wallet to try it?**
+No. The bot starts in **dry-run** with a simulated $10,000 balance — connect a wallet private key only when you are ready for live orders.
 
-> Real MEV extraction (sandwiching, backrunning) is **not** enabled by default — the scanner uses mempool data as an *early signal* for arbitrage routes. Always respect chain-specific regulations and mempool etiquette.
+**Can I run it 24/7 on a VPS?**
+Yes — it is a plain Node.js process (pm2/systemd/Docker-friendly). The dashboard binds to `0.0.0.0:4449`, so you can reach it from anywhere you allow in your firewall.
 
----
+**Is this a copy-trading or sniping tool?**
+No — it is a strategy execution bot: it computes its own edges from live order books and external data instead of following other wallets.
 
-## Cross-Chain Arbitrage
+## ⚠️ Disclaimer
 
-The cross-chain layer ships with connectors and addresses for:
+Trading prediction markets involves substantial risk of loss. Screenshots of third-party trader results are not a promise of future performance. This software is provided for educational purposes, with no warranty of profitability. Past performance does not guarantee future results. Never trade with funds you cannot afford to lose.
 
-- **Wormhole** (Ethereum ⇄ Solana core bridge)
-- **deBridge**, **Across**, **LayerZero / Stargate**, **Axelar** (config ready per chain)
-- **SolanaConnector** for Solana-side execution (Jupiter aggregator program)
+## 📜 License
 
-Enable it with **Features → Enable Crosschain**. Cross-chain opportunities are detected when price divergence between chains exceeds fees — a classic **cross-chain arbitrage** strategy used by professional **crypto bots trading** desks.
-
----
-
-## Flash Loan Arbitrage
-
-Enable **Features → Enable Flash Loans** to trade without idle capital:
-
-- Providers: **Aave V3**, **Balancer**, **DODO**
-- Configurable max loan (USD), provider fee (bps), auto-repay from proceeds
-- The bot bundles borrow → arb legs → repay into a single atomic transaction
-
----
-
-## Risk Management
-
-| Guard | Setting |
-|---|---|
-| Emergency pause (global stop) | `risk.emergencyPause` |
-| Min pool liquidity (USD) | `risk.minLiquidityUsd` |
-| Max daily loss (USD) | `risk.maxDailyLossUsd` |
-| Max consecutive failures | `risk.maxConsecutiveFailures` |
-| Cooldown after failure (sec) | `risk.cooldownAfterFailureSec` |
-| Max gas price (Gwei) | `risk.maxGasPriceGwei` |
-| Max trade size (USD) | `risk.maxTradeAmountUsd` |
-| Take profit / Stop loss (USD) | `risk.takeProfitUsd` / `risk.stopLossUsd` |
-| Kill-switch drawdown (%) | `risk.killSwitchDrawdownPct` |
-| Token blacklist | `risk.blacklistTokens` |
-| Honeypot check | `risk.honeypotCheck` |
-| Dry run (simulate only) | `features.dryRun` |
-
-Every candidate opportunity passes this gauntlet before a transaction is built. Failed trades trigger cooldowns; the kill-switch halts trading on drawdown.
-
----
-
-## Technical Architecture
-
-```
-┌────────────────────────────────────────────────────────────────┐
-│                       React Dashboard (Vite)                   │
-│        Overview · AI Agent · Settings (+ Wallets) · Logs       │
-└──────────────────────────────┬─────────────────────────────────┘
-                               │ REST API (Express, :4449)
-┌──────────────────────────────┴─────────────────────────────────┐
-│                        WebServer (src/web)                     │
-│  /api/stats /api/logs /api/settings /api/wallets /api/ai/*     │
-└──────────────────────────────┬─────────────────────────────────┘
-┌──────────────────────────────┴─────────────────────────────────┐
-│                        ArbAiBot (src/index)                    │
-│   trading loop · hot-reload · stats · AI schedule · logging    │
-└───┬──────────────┬───────────────┬──────────────┬──────────────┘
-    │              │               │              │
-┌───┴─────┐  ┌─────┴─────┐  ┌──────┴─────┐  ┌─────┴─────────┐
-│ Mempool │  │ Arbitrage │  │Transaction │  │ RiskManager   │
-│ Monitor │→ │ Detector  │→ │ Executor   │← │ (kill switch, │
-│ (MEV)   │  │ (+oracle) │  │ (signers,  │  │  cooldowns)   │
-└─────────┘  └───────────┘  │  wallets)  │  └───────────────┘
-                            └────────────┘
-┌────────────────────────────────────────────────────────────────┐
-│  SettingsStore (data/settings.json, versioned, hot-reloaded)   │
-│  trading · features · flashloan · risk · oracle · ai · wallets │
-│  networks: { rpc, mempoolRpc, tokens, dexes[], aggregators[] } │
-└────────────────────────────────────────────────────────────────┘
-```
-
-### Source layout
-```
-src/
-├── index.ts               # ArbAiBot orchestrator + trading loop
-├── config.ts              # legacy env config (NETWORKS, WALLETS, bridges)
-├── settings/
-│   └── SettingsStore.ts   # live settings + wallet management + getEffective()
-├── web/server.ts          # Express REST API + static dashboard
-├── dex/                   # UniswapV2, UniswapV3, PancakeSwap, Aerodrome,
-│                          # TraderJoe, Velodrome, QuickSwap, SushiSwap…
-├── trading/
-│   ├── ArbitrageDetector.ts    # opportunity scanning & scoring
-│   └── TransactionExecutor.ts  # tx building, signing, wallet selection
-├── mempool/MempoolMonitor.ts   # pending tx stream + swap decoding
-├── risk/RiskManager.ts         # pre-trade guards, kill switches
-├── crosschain/                 # Wormhole, Solana connectors
-└── ai/
-    ├── AiAgent.ts       # chat, analysis, autonomous patching
-    └── PriceOracle.ts   # DefiLlama / CoinGecko / custom USD prices
-webapp/src/              # React dashboard (Overview, AiChat, Settings, Logs)
-```
-
-### Tech stack
-**Node.js + TypeScript + ethers v6** (backend) · **React 18 + Vite** (dashboard) · **Express 5 + Helmet** (API) · **Winston** (rotating logs) · **Jest** (tests).
-
----
-
-## Configuration Reference
-
-Two layers of configuration, both hot-reloaded:
-
-1. **Dashboard (recommended)** — *Settings* page writes `data/settings.json`; changes apply within one loop iteration
-2. **Environment (`.env`)** — RPC URLs, fallback private keys, bootstrap values (see [Quick Start](#quick-start-guide))
-
-Key `data/settings.json` sections:
-
-| Section | Contents |
-|---|---|
-| `trading` | amounts, `minProfitUsd`, `maxSlippagePct`, `maxPathLength`, gas, `deadlineSec`, `loopIntervalMs`, `scanMode`, `maxPairsPerScan` |
-| `features` | mempool monitor, crosschain, flash loans, perp arb, concentrated liquidity, `dryRun` |
-| `flashloan` | provider, max amount, fee, auto-repay |
-| `risk` | see [Risk Management](#risk-management) |
-| `oracle` | provider (`defillama` / `coingecko` / `custom`), base URL, key, cache TTL |
-| `ai` | provider, model, API key/base URL, temperature, `analysisIntervalMin`, `autoApplyRecommendations`, **`autonomousTrading`** |
-| `wallets` | `activeId` + `list[]` — each with address, privateKey, seedPhrase, `settings` overrides, `allowedNetworks`, `dryRunOnly` |
-| `networks` | per chain: `enabled`, `rpcUrl`, `mempoolRpcUrl`, `pollIntervalMs`, `tokens[]`, `dexes[]` (factory/router), `aggregators[]` |
-
-### REST API (for scripting & integrations)
-```
-GET  /api/status · /api/stats · /api/logs?limit&level · /api/opportunities
-GET  /api/settings                PUT /api/settings               POST /api/settings/reset
-GET  /api/wallets                 POST /api/wallets               POST /api/wallets/generate
-PUT  /api/wallets/:id             DELETE /api/wallets/:id         POST /api/wallets/:id/activate
-GET  /api/ai/status               GET  /api/ai/messages           POST /api/ai/chat
-POST /api/ai/analyze              POST /api/ai/apply              DELETE /api/ai/messages
-GET  /api/prices                  GET  /api/networks              GET /api/meta
-```
-
----
-
-## FAQ
-
-<details>
-<summary><b>Is this AI trading bot free?</b></summary>
-Yes — ArbAiBot is 100% open source under MIT. No subscriptions, no revenue share. You pay only your own gas and optional LLM API costs (the <code>demo</code> AI mode is free).
-</details>
-
-<details>
-<summary><b>Can the AI really trade automatically?</b></summary>
-Yes. Enable <b>Settings → AI Agent → 🤖 Enable Automatic</b>. The agent then analyzes the market on a schedule, applies its own settings changes, and the trading loop executes the best profitable opportunities it finds. For maximum safety, start with <code>Dry run</code> ON.
-</details>
-
-<details>
-<summary><b>Do I need an API key for the AI?</b></summary>
-No. The built-in <code>demo</code> provider runs local heuristics with zero configuration. Connect OpenAI / OpenRouter / Anthropic (or any OpenAI-compatible endpoint like a local LLM) for model-quality analysis.
-</details>
-
-<details>
-<summary><b>How is this different from other crypto trading apps?</b></summary>
-It is a self-hosted arbitrage engine + AI agent + dashboard in one. You keep custody of keys, choose your own RPC nodes, add any DEX by factory/router address, and manage multiple wallets with individual settings — something hosted crypto trading apps rarely allow.
-</details>
-
-<details>
-<summary><b>Which wallet types are supported?</b></summary>
-Generated wallets (built-in BIP-39 generator), imported private keys / seed phrases, and MetaMask-bound accounts. Every wallet keeps its own trading settings and can be restricted to specific networks or dry-run-only mode.
-</details>
-
-<details>
-<summary><b>Where are private keys and seed phrases stored?</b></summary>
-Locally in <code>data/settings.json</code> on the machine running the bot. They are never transmitted to any external service; AI prompts contain only market statistics. Keep the file safe and use a dedicated server.
-</details>
-
-<details>
-<summary><b>Does it support MEV / sandwich strategies?</b></summary>
-The mempool monitor decodes pending swaps and uses them as early signals for arbitrage routing (the core of MEV bot arbitrage). Aggressive sandwiching is not implemented by default.
-</details>
-
-<details>
-<summary><b>Which chains are supported?</b></summary>
-Ethereum, Base, BSC, Arbitrum, Avalanche, Optimism, Polygon (EVM) plus Solana (via connector/Jupiter). Any new EVM chain works by adding an RPC URL and DEX addresses in the dashboard.
-</details>
-
-<details>
-<summary><b>Can I add my own DEX?</b></summary>
-Yes — Settings → Networks & Protocols → <b>+ Add protocol</b>: choose an implementation type (any Uniswap V2 fork / V3), paste factory + router, enable. Aggregator quote sources (OpenOcean / 1inch / ParaSwap / custom REST APIs) can be added the same way.
-</details>
-
-<details>
-<summary><b>Will it make money?</b></summary>
-No guarantee, ever. Arbitrage is competitive: profit depends on RPC quality, gas costs, competition and market conditions. Always start in dry-run, use small amounts, and read the disclaimer.
-</details>
-
----
-
-## Keywords
-
-`ai trading bots` · `crypto bots trading` · `arbitrage cryptocurrency` · `crypto trading apps` · `app for crypto trading` · `best exchange for crypto` · `best crypto coin exchange` · `platform for trading cryptocurrency` · `automatic trading` · `ai dex bot` · `ai trading bot` · `mev bot arbitrage` · `cross-chain arbitrage` · `trading app` · `defi arbitrage bot` · `dex arbitrage` · `flash loan arbitrage` · `mempool bot` · `uniswap arbitrage bot` · `pancakeswap bot` · `multi-wallet trading` · `crypto trading dashboard` · `open source trading bot` · `solana arbitrage` · `base chain arbitrage` · `bnb chain bot` · `ethereum bot` · `llm trading agent` · `gpt trading bot` · `auto profit bot`
-
----
-
-## Disclaimer
-
-**This software is provided for educational and research purposes only.** Trading cryptocurrencies, executing arbitrage and interacting with DeFi protocols involves substantial risk of financial loss. Nothing in this repository constitutes financial advice.
-
-- You are solely responsible for anything the bot does with your wallets — **start in dry-run mode**, test on small amounts, and never risk funds you cannot afford to lose
-- Private keys and seed phrases stored in `data/settings.json` are plain-text local files — secure your machine
-- Automated/AI-driven trading can misconfigure itself; the autonomous mode is provided **as is** — monitor the dashboard
-- The authors and contributors are **not liable** for any financial losses, liquidations, MEV penalties, or regulatory issues arising from the use of this software
-
-Use responsibly and in accordance with the laws of your jurisdiction.
-
----
-
-## License
-
-MIT © ArbAiBot contributors
-
-<div align="center">
-
-**⭐ Star this repository if you find it useful — it helps other traders discover the project!**
-
-</div>
+MIT
