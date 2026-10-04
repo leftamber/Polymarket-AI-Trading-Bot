@@ -1,0 +1,8 @@
+{
+  "initialBalance": 10000,
+  "cashBalance": 10000,
+  "feesPaid": 0,
+  "positions": {},
+  "trades": [],
+  "currentPrices": {}
+}

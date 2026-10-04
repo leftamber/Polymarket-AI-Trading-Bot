@@ -1,0 +1,79 @@
+{
+  "trading": {
+    "mode": "both",
+    "loopIntervalMs": 5000,
+    "marketsRefreshMs": 60000,
+    "bookRefreshMs": 10000,
+    "maxMarketsScanned": 500,
+    "minEdgePct": 1,
+    "orderSizeUsd": 5,
+    "minOrderSizeUsd": 2,
+    "maxOrderSizeUsd": 10,
+    "slippageTolerancePct": 2,
+    "orderTimeoutSec": 60,
+    "takerFeeBps": 150,
+    "makerFeeBps": 0,
+    "gasCostPerOrderUsd": 0.02,
+    "signalExpirySec": 5,
+    "minSpreadCents": 5,
+    "tickSizeCents": 1,
+    "btcTradeAmountUsd": 1,
+    "spikeThresholdPct": 0.15,
+    "divergenceThresholdPct": 5,
+    "spikeWindowSec": 60,
+    "decisionThreshold": 0.5,
+    "signalWeights": {
+      "spike": 0.5,
+      "divergence": 0.3,
+      "momentum": 0.2
+    },
+    "btcAsset": "BTC"
+  },
+  "features": {
+    "dryRun": true,
+    "enableBundleArb": true,
+    "enableMarketMaking": false,
+    "enableBtcSignals": true,
+    "enableFillSimulation": true
+  },
+  "risk": {
+    "maxPositionPerMarketUsd": 15,
+    "maxGlobalExposureUsd": 50,
+    "maxDailyLossUsd": 10,
+    "maxDrawdownPct": 15,
+    "min24hVolumeUsd": 10000,
+    "tradeOnlyHighVolume": false,
+    "whitelist": [],
+    "blacklist": [],
+    "killSwitchEnabled": true,
+    "maxConsecutiveFailures": 3,
+    "cooldownAfterFailureSec": 60,
+    "emergencyPause": false
+  },
+  "polymarket": {
+    "gammaApiUrl": "https://gamma-api.polymarket.com",
+    "clobApiUrl": "https://clob.polymarket.com",
+    "dataApiUrl": "https://data-api.polymarket.com",
+    "chainId": 137,
+    "privateKey": "",
+    "funderAddress": "",
+    "signatureType": 0,
+    "apiKey": "",
+    "apiSecret": "",
+    "apiPassphrase": "",
+    "dryRunInitialBalanceUsd": 10000,
+    "fillProbability": 0.8,
+    "paperFillFeeBps": 150
+  },
+  "ai": {
+    "provider": "demo",
+    "apiBaseUrl": "",
+    "apiKey": "",
+    "model": "gpt-4o-mini",
+    "temperature": 0.3,
+    "maxTokens": 1200,
+    "autoApplyRecommendations": false,
+    "analysisIntervalMin": 0,
+    "autonomousTrading": false
+  }
+}
