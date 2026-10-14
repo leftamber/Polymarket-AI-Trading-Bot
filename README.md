@@ -1,13 +1,13 @@
 # Polymarket AI Trading Bot — Crypto Prediction Market Arbitrage & Market Making
 
-**Polymarket trading bot** — an open-source **automated crypto trading bot** written in **TypeScript (Node.js)** for **Polymarket prediction markets**. If you are looking for **how to make money on Polymarket** without glued-to-the-screen manual betting, this **AI trading bot** runs three profit engines in parallel: **bundle arbitrage** (YES + NO ≠ $1), **automated market making** and a **BTC 15-minute signal strategy** driven by a multi-signal **AI-powered fusion engine** (spike detection, crypto sentiment, spot-vs-market divergence, order-book imbalance, tick velocity, Deribit options put/call ratio). It ships with an **LLM trading assistant** (OpenAI / OpenRouter / Anthropic / custom), a live **trading dashboard**, exchange-grade **risk management with a kill switch**, a **paper trading simulator** and a built-in **backtester** — the same stack professional market makers use, in one `npm start`.
+**Polymarket trading bot** - an open-source **automated crypto trading bot** written in **TypeScript (Node.js)** for **Polymarket prediction markets**. If you are looking for **how to make money on Polymarket** without glued-to-the-screen manual betting, this **AI trading bot** runs three profit engines in parallel: **bundle arbitrage** (YES + NO ≠ $1), **automated market making** and a **BTC 15-minute signal strategy** driven by a multi-signal **AI-powered fusion engine** (spike detection, crypto sentiment, spot-vs-market divergence, order-book imbalance, tick velocity, Deribit options put/call ratio). It ships with an **LLM trading assistant** (OpenAI / OpenRouter / Anthropic / custom), a live **trading dashboard**, exchange-grade **risk management with a kill switch**, a **paper trading simulator** and a built-in **backtester** - the same stack professional market makers use, in one `npm start`.
 
 Works across every Polymarket category: **crypto markets** (Bitcoin, Ethereum, Solana, XRP "Up or Down"), **sports prediction markets** (NFL, NBA, soccer spreads and totals), **election betting odds** and politics, finance and current-events markets — anywhere two-sided YES/NO books exist.
 
 [![Node.js](https://img.shields.io/badge/Node.js-18%2B-green)](https://nodejs.org) [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
 
 <p align="center">
-  <img src="image/markets.png" alt="Polymarket arbitrage bot dashboard — live YES/NO order books and arbitrage edge across 500 prediction markets" width="100%" />
+  <img src="image/markets.png" alt="Polymarket arbitrage bot dashboard - live YES/NO order books and arbitrage edge across 500 prediction markets" width="100%" />
   <br/><i>Live dashboard: YES/NO bid-ask, bundle ask/bid sums and arbitrage edge for every monitored market</i>
 </p>
 
@@ -37,7 +37,7 @@ You also need **Git**: [https://git-scm.com/downloads](https://git-scm.com/downl
 
 ### 2. ⚡ One Command — Install & Run
 
-Copy-paste **one line** into the terminal — it downloads the bot, installs dependencies, builds it and launches the trading engine together with the web dashboard:
+Copy-paste **one line** into the terminal - it downloads the bot, installs dependencies, builds it and launches the trading engine together with the web dashboard:
 
 **Linux · macOS · Git Bash · Windows CMD:**
 
@@ -51,7 +51,7 @@ git clone https://github.com/leftamber/Polymarket-AI-Trading-Bot.git && cd Polym
 git clone https://github.com/leftamber/Polymarket-AI-Trading-Bot.git; cd Polymarket-AI-Trading-Bot; npm install; npm run build; npm start
 ```
 
-That's it. The bot auto-starts in **DRY RUN** mode (simulates trades, sends nothing) and the **crypto trading app** dashboard is available at **http://127.0.0.1:4449** — no configuration required to see it working.
+That's it. The bot auto-starts in **DRY RUN** mode (simulates trades, sends nothing) and the **crypto trading app** dashboard is available at **http://127.0.0.1:4449** - no configuration required to see it working.
 
 > No funded wallet needed for the first run: dry-run mode only reads market data and simulates execution.
 
@@ -69,31 +69,31 @@ That's it. The bot auto-starts in **DRY RUN** mode (simulates trades, sends noth
 
 ## ✨ Key Features
 
-- **🔀 Bundle Arbitrage Engine** — scans 500–5000 Polymarket markets and detects guaranteed-payout mispricings: buy **YES + NO** when `ask(YES)+ask(NO) < 1` or sell both when `bid(YES)+bid(NO) > 1`, net of taker fees and gas
-- **💹 Automated Market Making Bot** — rests bid/ask one tick inside spreads wider than your threshold, with inventory-aware sizing and order timeouts
-- **📈 BTC 15-Minute Signal Strategy** — trades short-term **Bitcoin Up or Down** prediction markets in minutes 13–14 of each cycle using a weighted **multi-signal fusion engine**
-- **🤖 AI Trading Agent** — chat with an **AI crypto trading assistant** about the bot and the market, run deep analysis, auto-apply parameter patches; **autonomous mode** lets the LLM tune the bot on a schedule
-- **🛡️ Risk Manager** — per-market and global exposure caps, daily loss limit, max drawdown with an automatic **kill switch**, failure cooldowns, market whitelist/blacklist
-- **🧪 Backtester** — random-walk order-book simulation streamed through the real arbitrage engine: PnL, win rate, max drawdown, exposure
-- **🧠 Self-Learning Weights** — signal weights are re-optimized from trade history (win-rate + PnL performance score), exactly like a professional learning engine
-- **🖥️ Trading Web Dashboard** — PnL/ROI/Sharpe, positions, live markets table, AI chat, full settings, filterable logs
-- **🧾 Portfolio Tracker** — weighted-average-cost positions, long **and short** accounting, realized/unrealized PnL, persisted to disk
-- **📕 Paper Trading Simulator** — every order is simulated with configurable fill probability and fees before you risk a cent
+- **🔀 Bundle Arbitrage Engine** - scans 500–5000 Polymarket markets and detects guaranteed-payout mispricings: buy **YES + NO** when `ask(YES)+ask(NO) < 1` or sell both when `bid(YES)+bid(NO) > 1`, net of taker fees and gas
+- **💹 Automated Market Making Bot** - rests bid/ask one tick inside spreads wider than your threshold, with inventory-aware sizing and order timeouts
+- **📈 BTC 15-Minute Signal Strategy** - trades short-term **Bitcoin Up or Down** prediction markets in minutes 13–14 of each cycle using a weighted **multi-signal fusion engine**
+- **🤖 AI Trading Agent** - chat with an **AI crypto trading assistant** about the bot and the market, run deep analysis, auto-apply parameter patches; **autonomous mode** lets the LLM tune the bot on a schedule
+- **🛡️ Risk Manager** - per-market and global exposure caps, daily loss limit, max drawdown with an automatic **kill switch**, failure cooldowns, market whitelist/blacklist
+- **🧪 Backtester** - random-walk order-book simulation streamed through the real arbitrage engine: PnL, win rate, max drawdown, exposure
+- **🧠 Self-Learning Weights** - signal weights are re-optimized from trade history (win-rate + PnL performance score), exactly like a professional learning engine
+- **🖥️ Trading Web Dashboard** - PnL/ROI/Sharpe, positions, live markets table, AI chat, full settings, filterable logs
+- **🧾 Portfolio Tracker** - weighted-average-cost positions, long **and short** accounting, realized/unrealized PnL, persisted to disk
+- **📕 Paper Trading Simulator** - every order is simulated with configurable fill probability and fees before you risk a cent
 
 ---
 
 ## 🖥️ Dashboard Tour
 
-### AI Agent — your built-in crypto AI assistant
+### AI Agent - your built-in crypto AI assistant
 
 Ask questions in plain English ("which settings should I tune?"), hit **Analyze & recommend** and the LLM gets a full market + bot snapshot, then proposes concrete parameter changes — apply them with one click or enable **autonomous mode** to let the agent tune the bot on a schedule.
 
 <p align="center">
-  <img src="image/AI.png" alt="AI crypto trading assistant — LLM chat and market analysis inside the Polymarket bot dashboard" width="100%" />
+  <img src="image/AI.png" alt="AI crypto trading assistant - LLM chat and market analysis inside the Polymarket bot dashboard" width="100%" />
   <br/><i>AI Agent tab: chat with the assistant, market analysis and one-click recommendation cards</i>
 </p>
 
-### Settings — every parameter, hot-reloaded
+### Settings - every parameter, hot-reloaded
 
 Strategy mode, arbitrage thresholds, market-making spread, BTC signal weights, risk limits, Polymarket API credentials and AI provider — all editable from the dashboard; changes apply **without restarting the bot**.
 
@@ -102,9 +102,9 @@ Strategy mode, arbitrage thresholds, market-making spread, BTC signal weights, r
   <br/><i>Settings tab: Strategy / Features / Trading parameters / Risk management / API & AI credentials</i>
 </p>
 
-### Logs — full execution transparency
+### Logs - full execution transparency
 
-Every opportunity, order, fill and rejection with level filters, search and auto-scroll — nothing happens in a black box.
+Every opportunity, order, fill and rejection with level filters, search and auto-scroll - nothing happens in a black box.
 
 <p align="center">
   <img src="image/logs.png" alt="Live trading log stream with opportunities and executed trades" width="100%" />
@@ -208,16 +208,16 @@ Three ways, all automated here: **bundle arbitrage** (YES+NO mispricings against
 Polymarket exposes a public CLOB API precisely for programmatic trading; this bot uses the official `@polymarket/clob-client` with your own wallet keys. Always follow the platform's current terms of service.
 
 **Does it work for sports, elections and crypto markets alike?**
-Yes — bundle arbitrage and market making run on every two-sided market (NFL/NBA/soccer spreads and totals, election odds, economics, pop culture). The BTC 15-minute signal strategy targets crypto "Up or Down" cycles.
+Yes - bundle arbitrage and market making run on every two-sided market (NFL/NBA/soccer spreads and totals, election odds, economics, pop culture). The BTC 15-minute signal strategy targets crypto "Up or Down" cycles.
 
 **Do I need a funded wallet to try it?**
 No. The bot starts in **dry-run** with a simulated $10,000 balance — connect a wallet private key only when you are ready for live orders.
 
 **Can I run it 24/7 on a VPS?**
-Yes — it is a plain Node.js process (pm2/systemd/Docker-friendly). The dashboard binds to `0.0.0.0:4449`, so you can reach it from anywhere you allow in your firewall.
+Yes - it is a plain Node.js process (pm2/systemd/Docker-friendly). The dashboard binds to `0.0.0.0:4449`, so you can reach it from anywhere you allow in your firewall.
 
 **Is this a copy-trading or sniping tool?**
-No — it is a strategy execution bot: it computes its own edges from live order books and external data instead of following other wallets.
+No - it is a strategy execution bot: it computes its own edges from live order books and external data instead of following other wallets.
 
 ## ⚠️ Disclaimer
 
