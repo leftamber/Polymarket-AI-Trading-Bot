@@ -1,4 +1,4 @@
-# Polymarket AI Trading Bot — Crypto Prediction Market Arbitrage & Market Making
+# Polymarket AI Trading Bot - Crypto Prediction Market Arbitrage & Market Making
 
 **Polymarket trading bot** - an open-source **automated crypto trading bot** written in **TypeScript (Node.js)** for **Polymarket prediction markets**. If you are looking for **how to make money on Polymarket** without glued-to-the-screen manual betting, this **AI trading bot** runs three profit engines in parallel: **bundle arbitrage** (YES + NO ≠ $1), **automated market making** and a **BTC 15-minute signal strategy** driven by a multi-signal **AI-powered fusion engine** (spike detection, crypto sentiment, spot-vs-market divergence, order-book imbalance, tick velocity, Deribit options put/call ratio). It ships with an **LLM trading assistant** (OpenAI / OpenRouter / Anthropic / custom), a live **trading dashboard**, exchange-grade **risk management with a kill switch**, a **paper trading simulator** and a built-in **backtester** - the same stack professional market makers use, in one `npm start`.
 
