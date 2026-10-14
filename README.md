@@ -2,7 +2,7 @@
 
 **Polymarket trading bot** - an open-source **automated crypto trading bot** written in **TypeScript (Node.js)** for **Polymarket prediction markets**. If you are looking for **how to make money on Polymarket** without glued-to-the-screen manual betting, this **AI trading bot** runs three profit engines in parallel: **bundle arbitrage** (YES + NO ≠ $1), **automated market making** and a **BTC 15-minute signal strategy** driven by a multi-signal **AI-powered fusion engine** (spike detection, crypto sentiment, spot-vs-market divergence, order-book imbalance, tick velocity, Deribit options put/call ratio). It ships with an **LLM trading assistant** (OpenAI / OpenRouter / Anthropic / custom), a live **trading dashboard**, exchange-grade **risk management with a kill switch**, a **paper trading simulator** and a built-in **backtester** - the same stack professional market makers use, in one `npm start`.
 
-Works across every Polymarket category: **crypto markets** (Bitcoin, Ethereum, Solana, XRP "Up or Down"), **sports prediction markets** (NFL, NBA, soccer spreads and totals), **election betting odds** and politics, finance and current-events markets — anywhere two-sided YES/NO books exist.
+Works across every Polymarket category: **crypto markets** (Bitcoin, Ethereum, Solana, XRP "Up or Down"), **sports prediction markets** (NFL, NBA, soccer spreads and totals), **election betting odds** and politics, finance and current-events markets - anywhere two-sided YES/NO books exist.
 
 [![Node.js](https://img.shields.io/badge/Node.js-18%2B-green)](https://nodejs.org) [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
 
