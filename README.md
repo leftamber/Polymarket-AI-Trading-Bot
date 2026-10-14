@@ -95,7 +95,7 @@ Ask questions in plain English ("which settings should I tune?"), hit **Analyze 
 
 ### Settings - every parameter, hot-reloaded
 
-Strategy mode, arbitrage thresholds, market-making spread, BTC signal weights, risk limits, Polymarket API credentials and AI provider — all editable from the dashboard; changes apply **without restarting the bot**.
+Strategy mode, arbitrage thresholds, market-making spread, BTC signal weights, risk limits, Polymarket API credentials and AI provider - all editable from the dashboard; changes apply **without restarting the bot**.
 
 <p align="center">
   <img src="image/settings.png" alt="Trading bot settings panel — strategy, risk limits and Polymarket API credentials" width="100%" />
