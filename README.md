@@ -135,7 +135,7 @@ Polymarket runs 15-minute **Bitcoin Up or Down** markets around the clock — to
 
 <p align="center">
   <img src="image/profit.png" alt="Polymarket BTC Up or Down trading results — profit curve of a top prediction market trader" width="100%" />
-  <br/><i>Real BTC Up-or-Down market activity on Polymarket — the niche this strategy automates</i>
+  <br/><i>Real BTC Up-or-Down market activity on Polymarket - the niche this strategy automates</i>
 </p>
 
 Six processors vote **BULLISH/BEARISH** with strength (1–4) and confidence (0–1):
